@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+coverage.xml
+*.log
+
+# Mac
+.DS_Store
+
+# PyInstaller
+build/
+dist/
+*.manifest
+# We are likely tracking SpeakFlow.spec, so we don't ignore *.spec by default, 
+# or we can verify if we want to ignore others. 
+# For now, let's keep specs visible as they are often config.
+
+# IDE
+.vscode/
+.idea/
+
+# Local env / secrets
+.env
+.env.*
+*.local
+
+# Local app data generated while testing
+*.sqlite
+*.sqlite3
+*.db
+
+# Repository-specific local artifacts
+image.png
