@@ -12,6 +12,8 @@ LOGGER = logging.getLogger(__name__)
 FN_MASK = getattr(Quartz, "kCGEventFlagMaskSecondaryFn", 1 << 23)
 CMD_MASK = getattr(Quartz, "kCGEventFlagMaskCommand", 1 << 20)
 OPTION_MASK = getattr(Quartz, "kCGEventFlagMaskAlternate", 1 << 19)
+SHIFT_MASK = getattr(Quartz, "kCGEventFlagMaskShift", 1 << 17)
+CONTROL_MASK = getattr(Quartz, "kCGEventFlagMaskControl", 1 << 18)
 SPACE_KEYCODE = 49
 V_KEYCODE = 9
 
@@ -20,7 +22,7 @@ V_KEYCODE = 9
 class HotkeyCallbacks:
     on_press: Callable[[], None]
     on_release: Callable[[], None]
-    on_paste_last: Callable[[], None] | None = None
+    on_paste_last: Callable[[], bool] | None = None
 
 
 class HotkeyListener:
@@ -139,19 +141,21 @@ class HotkeyListener:
 
         flags = Quartz.CGEventGetFlags(event)
         keycode = Quartz.CGEventGetIntegerValueField(event, Quartz.kCGKeyboardEventKeycode)
+        modifiers = flags & (FN_MASK | CMD_MASK | OPTION_MASK | SHIFT_MASK | CONTROL_MASK)
 
         if (
             event_type == Quartz.kCGEventKeyDown
             and keycode == V_KEYCODE
-            and bool(flags & CMD_MASK)
-            and bool(flags & OPTION_MASK)
+            and modifiers == (CMD_MASK | OPTION_MASK)
         ):
+            handled = False
             if self.callbacks.on_paste_last is not None:
                 try:
-                    self.callbacks.on_paste_last()
+                    handled = bool(self.callbacks.on_paste_last())
                 except Exception:
                     LOGGER.exception("Paste-last callback failed")
-            return None
+            # Consume only when we actually handled paste-last.
+            return None if handled else event
 
         fn_pressed = bool(flags & FN_MASK)
 

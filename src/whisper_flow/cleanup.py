@@ -364,32 +364,34 @@ class TextCleanup:
         )
 
         deterministic = self._deterministic_cleanup(request)
-        provider = self._effective_cleanup_provider()
-
-        if provider is None or not deterministic:
+        providers = self._rewrite_provider_order()
+        if not providers or not deterministic:
             return CleanupResult(
                 text=deterministic,
                 output_mode=decision.output_mode,
                 used_lmstudio=False,
                 rewrite_provider=None,
             )
+        LOGGER.info("Cleanup rewrite order: %s", " -> ".join(providers))
 
-        if provider == "groq":
-            rewritten = self._groq.rewrite(deterministic, decision.output_mode)
-        else:
-            rewritten = self._lmstudio.rewrite(deterministic, decision.output_mode)
-        rewritten = self._validate_rewrite(
-            original=deterministic,
-            rewritten=rewritten,
-            output_mode=decision.output_mode,
-        )
-        if rewritten:
-            return CleanupResult(
-                text=rewritten,
+        for provider in providers:
+            if provider == "groq":
+                rewritten = self._groq.rewrite(deterministic, decision.output_mode)
+            else:
+                rewritten = self._lmstudio.rewrite(deterministic, decision.output_mode)
+            rewritten = self._validate_rewrite(
+                original=deterministic,
+                rewritten=rewritten,
                 output_mode=decision.output_mode,
-                used_lmstudio=(provider == "lmstudio"),
-                rewrite_provider=provider,
             )
+            if rewritten:
+                return CleanupResult(
+                    text=rewritten,
+                    output_mode=decision.output_mode,
+                    used_lmstudio=(provider == "lmstudio"),
+                    rewrite_provider=provider,
+                )
+            LOGGER.info("Cleanup provider '%s' unavailable or rejected; trying next fallback", provider)
         return CleanupResult(
             text=deterministic,
             output_mode=decision.output_mode,
@@ -397,13 +399,16 @@ class TextCleanup:
             rewrite_provider=None,
         )
 
-    def _effective_cleanup_provider(self) -> str | None:
+    def _rewrite_provider_order(self) -> list[str]:
+        if self.config.cleanup_provider == "deterministic":
+            return []
         if not self.config.lmstudio_enabled:
-            return None
+            return []
+
         provider = self.config.cleanup_provider
-        if provider in {"lmstudio", "groq"}:
-            return provider
-        return None
+        if provider in {"priority", "groq", "lmstudio"}:
+            return ["groq", "lmstudio"]
+        return []
 
     def _deterministic_cleanup(self, request: CleanupRequest) -> str:
         if request.mode == "hinglish_roman":

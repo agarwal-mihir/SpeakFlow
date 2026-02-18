@@ -44,6 +44,15 @@ def build_history_page(target) -> HistoryPageRefs:  # type: ignore[no-untyped-de
             ("text", "Text", 900.0),
         ]
     )
+    text_column = table.tableColumnWithIdentifier_("text")
+    if text_column is not None:
+        text_cell = text_column.dataCell()
+        if text_cell is not None:
+            # Enable multiline wrapping for transcript text.
+            text_cell.setLineBreakMode_(0)  # NSLineBreakByWordWrapping
+            text_cell.setUsesSingleLineMode_(False)
+            text_cell.setWraps_(True)
+            text_cell.setScrollable_(False)
 
     action_row = make_stack(vertical=False, spacing=theme.SPACE.sm)
     copy_button = make_button("Copy Selected", target, "copySelectedHistory:")

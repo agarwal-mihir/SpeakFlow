@@ -67,3 +67,37 @@ def test_set_groq_api_key_rejects_empty() -> None:
         pass
     else:
         raise AssertionError("Expected ValueError for empty key")
+
+
+def test_set_groq_api_key_surfaces_authorization_error(monkeypatch) -> None:
+    monkeypatch.delenv("GROQ_API_KEY", raising=False)
+
+    def fake_run(cmd, check, capture_output, text, timeout):  # noqa: ARG001
+        return FakeResult(returncode=152, stderr="Unable to obtain authorization for this operation.")
+
+    monkeypatch.setattr(secret_store_module.subprocess, "run", fake_run)
+
+    store = SecretStore(service_name="svc")
+    try:
+        store.set_groq_api_key("gsk_test")
+    except RuntimeError as exc:
+        assert "authorization denied" in str(exc).lower()
+    else:
+        raise AssertionError("Expected RuntimeError for keychain authorization failure")
+
+
+def test_set_groq_api_key_timeout_has_clear_message(monkeypatch) -> None:
+    monkeypatch.delenv("GROQ_API_KEY", raising=False)
+
+    def fake_run(cmd, check, capture_output, text, timeout):  # noqa: ARG001
+        raise secret_store_module.subprocess.TimeoutExpired(cmd=cmd, timeout=timeout)
+
+    monkeypatch.setattr(secret_store_module.subprocess, "run", fake_run)
+
+    store = SecretStore(service_name="svc")
+    try:
+        store.set_groq_api_key("gsk_test")
+    except RuntimeError as exc:
+        assert "timed out" in str(exc).lower()
+    else:
+        raise AssertionError("Expected RuntimeError for keychain timeout")

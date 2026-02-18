@@ -21,6 +21,7 @@ from AppKit import (
     NSColor,
     NSControlStateValueOff,
     NSControlStateValueOn,
+    NSFontAttributeName,
     NSMenu,
     NSMenuItem,
     NSPasteboard,
@@ -29,6 +30,8 @@ from AppKit import (
     NSSecureTextField,
     NSStatusBar,
     NSTextField,
+    NSStringDrawingUsesFontLeading,
+    NSStringDrawingUsesLineFragmentOrigin,
     NSVariableStatusItemLength,
     NSView,
     NSWindow,
@@ -37,7 +40,7 @@ from AppKit import (
     NSWindowStyleMaskResizable,
     NSWindowStyleMaskTitled,
 )
-from Foundation import NSObject, NSTimer
+from Foundation import NSObject, NSString, NSTimer
 
 from whisper_flow.audio import AudioRecorder
 from whisper_flow.autostart import install_launch_agent, uninstall_launch_agent
@@ -333,6 +336,15 @@ class AppController(NSObject):
         quit_item = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_("Quit SpeakFlow", "terminate:", "q")
         app_submenu.addItem_(quit_item)
         app_item.setSubmenu_(app_submenu)
+
+        edit_item = NSMenuItem.alloc().init()
+        main_menu.addItem_(edit_item)
+        edit_submenu = NSMenu.alloc().initWithTitle_("Edit")
+        edit_submenu.addItem_(NSMenuItem.alloc().initWithTitle_action_keyEquivalent_("Cut", "cut:", "x"))
+        edit_submenu.addItem_(NSMenuItem.alloc().initWithTitle_action_keyEquivalent_("Copy", "copy:", "c"))
+        edit_submenu.addItem_(NSMenuItem.alloc().initWithTitle_action_keyEquivalent_("Paste", "paste:", "v"))
+        edit_submenu.addItem_(NSMenuItem.alloc().initWithTitle_action_keyEquivalent_("Select All", "selectAll:", "a"))
+        edit_item.setSubmenu_(edit_submenu)
 
         NSApp().setMainMenu_(main_menu)
 
@@ -763,7 +775,7 @@ class AppController(NSObject):
             self.settings_page.lmstudio_switch.setState_(
                 NSControlStateValueOn if self.config.lmstudio_enabled else NSControlStateValueOff
             )
-            provider_index = {"lmstudio": 0, "groq": 1, "deterministic": 2}.get(self.config.cleanup_provider, 0)
+            provider_index = 1 if self.config.cleanup_provider == "deterministic" else 0
             self.settings_page.cleanup_provider_popup.selectItemAtIndex_(provider_index)
             key_status = "Configured" if self._groq_key_present else "Missing"
             self.settings_page.groq_key_status_label.setStringValue_(f"Groq key: {key_status}")
@@ -851,6 +863,30 @@ class AppController(NSObject):
         stats = self.history.stats()
         if self.home_page.stats_words is not None:
             self.home_page.stats_words.setStringValue_(f"{stats['total_count']:,} words")
+
+    def tableView_heightOfRow_(self, table_view, row):  # type: ignore[no-untyped-def]
+        default_height = float(table_view.rowHeight())
+        if self.history_page is None or table_view is not self.history_page.table:
+            return default_height
+        if row < 0 or row >= len(self._history_rows):
+            return default_height
+
+        text_column = table_view.tableColumnWithIdentifier_("text")
+        if text_column is None:
+            return default_height
+
+        transcript = self._history_rows[row].final_text or ""
+        if not transcript:
+            return default_height
+
+        text_width = max(120.0, float(text_column.width()) - 14.0)
+        options = NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+        bounds = NSString.stringWithString_(transcript).boundingRectWithSize_options_attributes_(
+            (text_width, 10000.0),
+            options,
+            {NSFontAttributeName: theme.body_font()},
+        )
+        return max(default_height, float(bounds.size.height) + 10.0)
 
     def _reload_dictionary(self) -> None:
         self._dictionary_rows = self.content_store.list_dictionary(self._dictionary_query, limit=300, offset=0)
@@ -1069,20 +1105,20 @@ class AppController(NSObject):
             self.state = ServiceState.TRANSCRIBING
             self._show_done_on_next_idle = False
 
-    def _on_paste_last_hotkey(self) -> None:
-        self.pasteLastDictation_(None)
+    def _on_paste_last_hotkey(self) -> bool:
+        return bool(self.pasteLastDictation_(None))
 
     def pasteLastDictation_(self, _sender):  # type: ignore[no-untyped-def]
         if not self._service_enabled or not self._permissions_ready:
-            return
+            return False
         if not self.config.paste_last_shortcut_enabled:
-            return
+            return False
 
         text = self._last_dictation_text.strip()
         if not text:
             with self._state_lock:
                 self.last_error = "No recent dictation available to paste."
-            return
+            return False
 
         try:
             self.inserter.insert_text(
@@ -1093,8 +1129,10 @@ class AppController(NSObject):
             )
             with self._state_lock:
                 self.last_error = ""
+            return True
         except Exception as exc:
             self._set_error(exc)
+            return False
 
     # Menu/status actions
     def openMainWindow_(self, _sender):  # type: ignore[no-untyped-def]
@@ -1119,14 +1157,14 @@ class AppController(NSObject):
         if self.settings_page is None:
             return
         index = int(self.settings_page.cleanup_provider_popup.indexOfSelectedItem())
-        mapping = {0: "lmstudio", 1: "groq", 2: "deterministic"}
-        self.config.cleanup_provider = mapping.get(index, "lmstudio")
-        if self.config.cleanup_provider == "groq":
+        mapping = {0: "priority", 1: "deterministic"}
+        self.config.cleanup_provider = mapping.get(index, "priority")
+        if self.config.cleanup_provider == "priority":
             self._groq_key_present = self.secret_store.has_groq_api_key()
             if not self._groq_key_present:
                 self._show_alert(
                     "Groq Key Missing",
-                    "Set your Groq API key in Settings. Cleanup will fall back to deterministic mode until key is configured.",
+                    "Set your Groq API key in Settings. Cleanup will continue with LM Studio/deterministic fallback until configured.",
                 )
         self._save_config()
 
@@ -1296,7 +1334,12 @@ class AppController(NSObject):
         alert.addButtonWithTitle_("Cancel")
 
         field = NSSecureTextField.alloc().initWithFrame_(((0.0, 0.0), (420.0, 24.0)))
+        field.setPlaceholderString_("gsk_...")
         alert.setAccessoryView_(field)
+        window = alert.window()
+        if window is not None:
+            window.setInitialFirstResponder_(field)
+            window.makeFirstResponder_(field)
         result = alert.runModal()
         if int(result) != 1000:
             return None

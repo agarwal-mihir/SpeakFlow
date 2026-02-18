@@ -50,7 +50,11 @@ def build_settings_page(target) -> SettingsPageRefs:  # type: ignore[no-untyped-
     svc_row = make_stack(vertical=False, spacing=theme.SPACE.md)
     service_button = make_button("Stop Service", target, "toggleServiceFromSettings:", primary=True)
     lmstudio_switch = make_switch("Use AI cleanup", target, "toggleLmStudioFromSettings:")
-    cleanup_provider_popup = make_popup(["LM Studio", "Groq API", "Deterministic"], target, "changeCleanupProvider:")
+    cleanup_provider_popup = make_popup(
+        ["Groq -> LM Studio", "Deterministic"],
+        target,
+        "changeCleanupProvider:",
+    )
     svc_row.addArrangedSubview_(service_button)
     svc_row.addArrangedSubview_(lmstudio_switch)
     svc_row.addArrangedSubview_(cleanup_provider_popup)

@@ -73,7 +73,9 @@ def _callbacks(counter: dict[str, int]) -> HotkeyCallbacks:
     return HotkeyCallbacks(
         on_press=lambda: counter.__setitem__("press", counter["press"] + 1),
         on_release=lambda: counter.__setitem__("release", counter["release"] + 1),
-        on_paste_last=lambda: counter.__setitem__("paste_last", counter.get("paste_last", 0) + 1),
+        on_paste_last=lambda: (
+            counter.__setitem__("paste_last", counter.get("paste_last", 0) + 1) or True
+        ),
     )
 
 
@@ -181,7 +183,7 @@ def test_event_callback_option_cmd_v_triggers_paste_last_and_consumes_event(monk
     assert counter["paste_last"] == 1
 
 
-def test_event_callback_option_cmd_v_without_callback_is_still_consumed(monkeypatch) -> None:
+def test_event_callback_option_cmd_v_without_callback_is_not_consumed(monkeypatch) -> None:
     fake_quartz = _FakeQuartz()
     monkeypatch.setattr(hotkey, "Quartz", fake_quartz)
 
@@ -196,7 +198,25 @@ def test_event_callback_option_cmd_v_without_callback_is_still_consumed(monkeypa
     }
 
     returned = listener._event_callback(None, fake_quartz.kCGEventKeyDown, event, None)
-    assert returned is None
+    assert returned is event
+
+
+def test_event_callback_plain_cmd_v_is_not_consumed(monkeypatch) -> None:
+    fake_quartz = _FakeQuartz()
+    monkeypatch.setattr(hotkey, "Quartz", fake_quartz)
+
+    counter = {"press": 0, "release": 0, "paste_last": 0}
+    listener = HotkeyListener("fn_hold", _callbacks(counter))
+    listener._running.set()
+    event = {
+        "flags": fake_quartz.kCGEventFlagMaskCommand,
+        "keycode": hotkey.V_KEYCODE,
+    }
+
+    returned = listener._event_callback(None, fake_quartz.kCGEventKeyDown, event, None)
+
+    assert returned is event
+    assert counter["paste_last"] == 0
 
 
 def test_run_sets_error_when_event_tap_creation_fails(monkeypatch) -> None:

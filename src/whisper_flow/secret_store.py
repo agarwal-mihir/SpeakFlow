@@ -10,6 +10,7 @@ LOGGER = logging.getLogger(__name__)
 DEFAULT_KEYCHAIN_SERVICE = "com.speakflow.desktop"
 GROQ_API_KEY_ACCOUNT = "groq_api_key"
 LOGIN_KEYCHAIN_PATH = Path.home() / "Library" / "Keychains" / "login.keychain-db"
+SECURITY_TIMEOUT_SECONDS = 30.0
 
 
 class SecretStore:
@@ -48,7 +49,7 @@ class SecretStore:
         if not value:
             raise ValueError("API key cannot be empty")
 
-        result = self._run_security(
+        self._run_security(
             [
                 "add-generic-password",
                 "-a",
@@ -62,11 +63,6 @@ class SecretStore:
             ],
             required=True,
         )
-        if result is None:
-            raise RuntimeError(
-                "Unable to store Groq API key in Keychain. "
-                "If prompted by macOS, allow Keychain access and retry."
-            )
 
     def delete_groq_api_key(self) -> None:
         self._run_security(
@@ -88,24 +84,45 @@ class SecretStore:
                 check=False,
                 capture_output=True,
                 text=True,
-                timeout=2.5,
+                timeout=SECURITY_TIMEOUT_SECONDS,
             )
         except FileNotFoundError:
+            if required:
+                raise RuntimeError("macOS security command not found") from None
             LOGGER.warning("macOS security command not found")
             return None
+        except subprocess.TimeoutExpired:
+            message = (
+                "Timed out waiting for Keychain authorization. "
+                "Please unlock the login keychain in Keychain Access and retry."
+            )
+            if required:
+                raise RuntimeError(message) from None
+            LOGGER.warning(message)
+            return None
         except subprocess.SubprocessError:
+            if required:
+                raise RuntimeError("Keychain command failed unexpectedly") from None
             LOGGER.warning("Keychain command failed unexpectedly", exc_info=True)
             return None
 
         if result.returncode != 0:
             stderr = result.stderr.strip()
             if required:
-                LOGGER.warning("Keychain command failed: %s", stderr)
+                message = (
+                    "Unable to store Groq API key in Keychain. "
+                    "Open Keychain Access, unlock the 'login' keychain, and retry."
+                )
+                if stderr:
+                    message = f"{message} Details: {stderr}"
                 if "Unable to obtain authorization for this operation" in stderr:
-                    LOGGER.warning(
+                    message = (
                         "Keychain authorization denied. "
-                        "Open Keychain Access and unlock 'login' keychain, then retry."
+                        "Open Keychain Access, unlock the 'login' keychain, "
+                        "then retry saving the key."
                     )
+                LOGGER.warning("Keychain command failed: %s", stderr)
+                raise RuntimeError(message) from None
             else:
                 LOGGER.debug("Keychain command failed: %s", stderr)
             return None

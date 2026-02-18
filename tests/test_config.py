@@ -17,7 +17,7 @@ def test_config_store_writes_and_reads(tmp_path: Path) -> None:
     assert loaded.lmstudio_enabled is False
     assert loaded.lmstudio_auto_start is True
     assert loaded.lmstudio_start_timeout_ms == 8000
-    assert loaded.cleanup_provider == "lmstudio"
+    assert loaded.cleanup_provider == "priority"
     assert loaded.groq_base_url == "https://api.groq.com/openai/v1"
     assert loaded.groq_model == "meta-llama/llama-4-maverick-17b-128e-instruct"
     assert loaded.duck_system_audio_while_recording is True

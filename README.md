@@ -40,6 +40,18 @@ App bundle path:
 If you prefer user-local install instead:
 `APP_INSTALL_DIR="$HOME/Applications" bash scripts/build_app.sh`
 
+## Fast Dev Loop (No Rebuild)
+
+For rapid iteration, run directly from source instead of rebuilding `.app` each time:
+
+```bash
+cd /path/to/SpeakFlow
+bash scripts/dev_run.sh
+```
+
+After code changes, stop and re-run `scripts/dev_run.sh`.
+Use full app build only when you need to validate packaging/permissions behavior in the bundled app.
+
 ## Build DMG Installer
 
 Create a drag-and-drop installer DMG:
@@ -117,7 +129,9 @@ Important keys:
 - `hotkey_mode`: `fn_hold` or `fn_space_hold`
 - `language_mode`: `auto`, `english`, `hinglish_roman`
 - `lmstudio_enabled`: `true`/`false`
-- `cleanup_provider`: `lmstudio`, `groq`, `deterministic`
+- `cleanup_provider`: `priority` or `deterministic`
+  - `priority` = `Groq -> LM Studio -> deterministic fallback`
+  - legacy `lmstudio` / `groq` values are treated as `priority`
 - `lmstudio_auto_start`: `true`/`false` (auto-launch LM Studio if it is closed)
 - `lmstudio_start_timeout_ms`: wait budget for LM Studio to come online (default `8000`)
 - `groq_base_url`: default `https://api.groq.com/openai/v1`
@@ -140,6 +154,7 @@ Groq key storage:
 - Set from `Settings -> Set Groq API Key`.
 - Key is stored in macOS Keychain service `com.speakflow.desktop` (account `groq_api_key`).
 - Env var `GROQ_API_KEY` is also supported and takes precedence.
+- If save fails with authorization error, unlock the `login` keychain in Keychain Access and retry.
 
 ## Launch on Login
 

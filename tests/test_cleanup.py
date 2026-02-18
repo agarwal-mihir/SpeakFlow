@@ -79,6 +79,46 @@ def test_cleanup_uses_lmstudio_rewrite_when_available() -> None:
     assert result.used_lmstudio is True
 
 
+def test_cleanup_priority_falls_back_from_groq_to_lmstudio() -> None:
+    cfg = AppConfig(
+        cleanup_provider="priority",
+        lmstudio_enabled=True,
+        language_mode="english",
+    )
+    cleanup = TextCleanup(cfg, secret_store=FakeSecretStore("gsk_test"))
+    calls: list[str] = []
+    cleanup._groq = types.SimpleNamespace(rewrite=lambda _text, _mode: (calls.append("groq"), None)[1])
+    cleanup._lmstudio = types.SimpleNamespace(
+        rewrite=lambda _text, _mode: (calls.append("lmstudio"), "Hello there!")[1]
+    )
+
+    result = cleanup.clean(FakeTranscript("hello there", "en", 0.8, False))
+
+    assert calls == ["groq", "lmstudio"]
+    assert result.text == "Hello there!"
+    assert result.used_lmstudio is True
+    assert result.rewrite_provider == "lmstudio"
+
+
+def test_cleanup_priority_falls_back_to_deterministic_when_both_ai_rewrites_fail() -> None:
+    cfg = AppConfig(
+        cleanup_provider="priority",
+        lmstudio_enabled=True,
+        language_mode="english",
+    )
+    cleanup = TextCleanup(cfg, secret_store=FakeSecretStore("gsk_test"))
+    calls: list[str] = []
+    cleanup._groq = types.SimpleNamespace(rewrite=lambda _text, _mode: (calls.append("groq"), None)[1])
+    cleanup._lmstudio = types.SimpleNamespace(rewrite=lambda _text, _mode: (calls.append("lmstudio"), None)[1])
+
+    result = cleanup.clean(FakeTranscript("hello there", "en", 0.8, False))
+
+    assert calls == ["groq", "lmstudio"]
+    assert result.text == "Hello there."
+    assert result.used_lmstudio is False
+    assert result.rewrite_provider is None
+
+
 def test_cleanup_uses_groq_rewrite_when_selected() -> None:
     cfg = AppConfig(
         cleanup_provider="groq",
@@ -95,18 +135,19 @@ def test_cleanup_uses_groq_rewrite_when_selected() -> None:
     assert result.rewrite_provider == "groq"
 
 
-def test_cleanup_falls_back_when_groq_key_missing() -> None:
+def test_cleanup_falls_back_to_lmstudio_when_groq_key_missing() -> None:
     cfg = AppConfig(
         cleanup_provider="groq",
         lmstudio_enabled=True,
         language_mode="english",
     )
     cleanup = TextCleanup(cfg, secret_store=FakeSecretStore(None))
+    cleanup._lmstudio = types.SimpleNamespace(rewrite=lambda _text, _mode: "Hello there!")
 
     result = cleanup.clean(FakeTranscript("hello there", "en", 0.8, False))
 
-    assert result.text == "Hello there."
-    assert result.rewrite_provider is None
+    assert result.text == "Hello there!"
+    assert result.rewrite_provider == "lmstudio"
 
 
 def test_cleanup_falls_back_when_lmstudio_returns_none() -> None:

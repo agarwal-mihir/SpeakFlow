@@ -422,8 +422,8 @@ def test_change_cleanup_provider_updates_config(monkeypatch) -> None:
     controller.settings_page = FakeSettings()  # type: ignore[assignment]
     controller.changeCleanupProvider_(None)
 
-    assert controller.config.cleanup_provider == "groq"
-    assert saved == ["groq"]
+    assert controller.config.cleanup_provider == "deterministic"
+    assert saved == ["deterministic"]
 
 
 def test_set_groq_key_uses_secret_store(monkeypatch) -> None:

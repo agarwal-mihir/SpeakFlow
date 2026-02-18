@@ -10,7 +10,7 @@ from typing import Literal
 HotkeyMode = Literal["fn_hold", "fn_space_hold"]
 LanguageMode = Literal["auto", "english", "hinglish_roman"]
 InsertMode = Literal["clipboard_paste"]
-CleanupProvider = Literal["lmstudio", "groq", "deterministic"]
+CleanupProvider = Literal["priority", "lmstudio", "groq", "deterministic"]
 CloseBehavior = Literal["hide_to_background"]
 LoginWindowBehavior = Literal["open"]
 UIDensity = Literal["comfortable", "compact"]
@@ -31,7 +31,7 @@ class AppConfig:
     lmstudio_model: str | None = None
     lmstudio_auto_start: bool = True
     lmstudio_start_timeout_ms: int = 8000
-    cleanup_provider: CleanupProvider = "lmstudio"
+    cleanup_provider: CleanupProvider = "priority"
     groq_base_url: str = "https://api.groq.com/openai/v1"
     groq_model: str = "meta-llama/llama-4-maverick-17b-128e-instruct"
     insert_mode: InsertMode = "clipboard_paste"
@@ -58,7 +58,7 @@ class AppConfig:
             raise ValueError(f"Unsupported language_mode: {self.language_mode}")
         if self.insert_mode != "clipboard_paste":
             raise ValueError("Only clipboard_paste is currently supported")
-        if self.cleanup_provider not in {"lmstudio", "groq", "deterministic"}:
+        if self.cleanup_provider not in {"priority", "lmstudio", "groq", "deterministic"}:
             raise ValueError(f"Unsupported cleanup_provider: {self.cleanup_provider}")
         if self.max_cleanup_timeout_ms < 200:
             raise ValueError("max_cleanup_timeout_ms must be >= 200")
