@@ -1,176 +1,113 @@
-# SpeakFlow Local (macOS)
+# SpeakFlow (Swift Native)
 
-Local-first Wispr Flow style dictation app for macOS with:
-- Desktop window UI (Dashboard + History)
-- Full navigation pages: Home, History, Dictionary, Snippets, Style, Notes, Settings, Permissions
-- Dock app + menu bar app running together
-- Close window to keep dictation running in background
-- Quit only with `Cmd+Q`
-- Global hold-to-talk (`Fn` or fallback `Fn+Space`)
-- English and Hinglish (Roman) output
-- Optional LM Studio cleanup via local OpenAI-compatible endpoint
-- Optional Groq cleanup via OpenAI-compatible API
-- Auto paste into focused chat box with clipboard restore
-- Automatic speaker-bleed reduction by ducking system output volume while dictating
-- Floating recording indicator with live level meter
-- Global fallback paste shortcut `Option+Cmd+V` (while service is running)
+SpeakFlow is a local-first macOS dictation app built in Swift (SwiftUI + AppKit bridges).
+
+## Current V1 Scope
+
+- Dictation-first workflow: record -> transcribe -> cleanup -> insert
+- Global hold-to-talk: `Fn` or `Fn+Space`
+- Global paste-last fallback: `Option+Cmd+V`
+- Floating recording indicator (recording/transcribing/done/error)
+- Permissions onboarding + re-check
+- Desktop UI pages: Home, History, Settings, Permissions
+- History: search/copy/delete + stats
+- Background service on window close, quit on `Cmd+Q`
+- Cleanup chain: `Groq -> LM Studio -> deterministic fallback`
+- Local STT: WhisperKit/CoreML
 
 ## Requirements
 
 - macOS (Apple Silicon recommended)
-- Python 3.9+
+- Full Xcode (recommended)
 - LM Studio (optional)
 - Groq API key (optional)
 
-## Build Native App
+## Project Layout
+
+- Swift package: `/Users/mihiragarwal/Desktop/Whisper/swift/SpeakFlow`
+- App source: `/Users/mihiragarwal/Desktop/Whisper/swift/SpeakFlow/Sources`
+- Tests: `/Users/mihiragarwal/Desktop/Whisper/swift/SpeakFlow/Tests`
+
+## Build App
 
 ```bash
-cd /path/to/SpeakFlow
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -U pip
-pip install -e '.[dev,app]'
-bash scripts/build_app.sh
-open /Applications/SpeakFlow.app
+cd /Users/mihiragarwal/Desktop/Whisper
+bash scripts/build_swift_app.sh
 ```
 
-App bundle path:
+Installs to:
 `/Applications/SpeakFlow.app`
 
-If you prefer user-local install instead:
-`APP_INSTALL_DIR="$HOME/Applications" bash scripts/build_app.sh`
-
-## Fast Dev Loop (No Rebuild)
-
-For rapid iteration, run directly from source instead of rebuilding `.app` each time:
+## Build DMG
 
 ```bash
-cd /path/to/SpeakFlow
-bash scripts/dev_run.sh
+cd /Users/mihiragarwal/Desktop/Whisper
+bash scripts/build_swift_dmg.sh
 ```
 
-After code changes, stop and re-run `scripts/dev_run.sh`.
-Use full app build only when you need to validate packaging/permissions behavior in the bundled app.
+Output:
+`~/Desktop/SpeakFlow-1.0.0.dmg`
 
-## Build DMG Installer
-
-Create a drag-and-drop installer DMG:
+## Notarize DMG
 
 ```bash
-cd /path/to/SpeakFlow
-bash scripts/build_dmg.sh
+cd /Users/mihiragarwal/Desktop/Whisper
+APPLE_ID=... APPLE_TEAM_ID=... APPLE_APP_PASSWORD=... \
+  bash scripts/notarize_swift_dmg.sh /absolute/path/to/SpeakFlow-1.0.0.dmg
 ```
 
-Notes:
-- `build_dmg.sh` only packages an existing `.app` bundle. It does not build/install the app.
-- It picks `SpeakFlow.app` from `/Applications`, `~/Applications`, or `dist/` (in that order).
-- You can override with `APP_BUNDLE=/absolute/path/to/SpeakFlow.app`.
+## Dev/Test Workflow
 
-Output pattern:
-`~/Desktop/SpeakFlow-<version>.dmg`
+Run tests:
 
-Set a custom output directory:
-`OUTPUT_DIR=/absolute/path bash scripts/build_dmg.sh`
+```bash
+cd /Users/mihiragarwal/Desktop/Whisper/swift/SpeakFlow
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --disable-sandbox -c debug
+```
+
+Open in Xcode:
+
+```bash
+cd /Users/mihiragarwal/Desktop/Whisper/swift/SpeakFlow
+xcodegen generate
+open /Users/mihiragarwal/Desktop/Whisper/swift/SpeakFlow/SpeakFlow.xcodeproj
+```
 
 ## Runtime Behavior
 
-- On launch, SpeakFlow opens a desktop window.
-- Closing the window hides it and keeps background dictation alive.
-- Reopen from Dock click or menu bar item `Open SpeakFlow`.
-- Use `Cmd+Q` to fully quit.
-- During dictation, a draggable floating indicator appears near the bottom of the screen.
-- Indicator behavior:
-  - Recording: live mic level meter
-  - Transcribing: flatline meter + transcribing state
-  - Success/Error: short status flash then auto-hide (default 1s)
+- Launch opens desktop window + status bar item.
+- Closing window hides app to background; dictation stays active.
+- `Cmd+Q` fully quits.
+- If auto-paste fails and fallback is enabled, last dictation stays in clipboard.
 
-## Permission Onboarding
+## Permissions Required
 
-On first launch, a guided setup window asks for:
 - Microphone
 - Accessibility
 - Input Monitoring
 - Automation (System Events)
 
-The app blocks dictation until all required permissions are granted.
-For Input Monitoring, macOS requires manual toggle in System Settings.
+## Data Paths
 
-If automatic paste fails:
-- The latest dictation is intentionally left in clipboard (default behavior).
-- You can immediately press `Cmd+V` in your target app.
-- You can also press `Option+Cmd+V` to re-paste the most recent dictation while service is on.
+- Config: `~/Library/Application Support/SpeakFlow/config.json`
+- History DB: `~/Library/Application Support/SpeakFlow/history.sqlite3`
+- Logs: `~/Library/Logs/SpeakFlow/app.log`
 
-## Data Storage
+## Keychain
 
-Successful dictations are stored in:
-`~/Library/Application Support/SpeakFlow/history.sqlite3`
+- Service: `com.speakflow.desktop`
+- Account: `groq_api_key`
 
-UI content pages are stored in:
-`~/Library/Application Support/SpeakFlow/content.sqlite3`
+## Launch at Login
 
-History supports:
-- Search
-- Copy selected transcript
-- Delete selected transcript
-- Quick stats (count/latest/top app)
-
-Dictionary, Snippets, Style, and Notes support:
-- Create
-- Edit
-- Delete
-- Local-only persistence
-
-## Config
-
-Config file:
-`~/Library/Application Support/SpeakFlow/config.json`
-
-Important keys:
-- `hotkey_mode`: `fn_hold` or `fn_space_hold`
-- `language_mode`: `auto`, `english`, `hinglish_roman`
-- `lmstudio_enabled`: `true`/`false`
-- `cleanup_provider`: `priority` or `deterministic`
-  - `priority` = `Groq -> LM Studio -> deterministic fallback`
-  - legacy `lmstudio` / `groq` values are treated as `priority`
-- `lmstudio_auto_start`: `true`/`false` (auto-launch LM Studio if it is closed)
-- `lmstudio_start_timeout_ms`: wait budget for LM Studio to come online (default `8000`)
-- `groq_base_url`: default `https://api.groq.com/openai/v1`
-- `groq_model`: default `meta-llama/llama-4-maverick-17b-128e-instruct`
-- `duck_system_audio_while_recording`: `true`/`false`
-- `duck_target_volume_percent`: `0..100` (default `8`)
-- `close_behavior`: `hide_to_background`
-- `login_window_behavior`: `open`
-- `floating_indicator_enabled`: `true`/`false`
-- `floating_indicator_hide_delay_ms`: `200..10000` (default `1000`)
-- `floating_indicator_origin_x`: float or null
-- `floating_indicator_origin_y`: float or null
-- `paste_last_shortcut_enabled`: `true`/`false`
-- `paste_failure_keep_dictation_in_clipboard`: `true`/`false`
-- `ui_last_tab`: last selected page
-- `ui_density`: `comfortable` or `compact`
-- `ui_show_welcome_card`: `true`/`false`
-
-Groq key storage:
-- Set from `Settings -> Set Groq API Key`.
-- Key is stored in macOS Keychain service `com.speakflow.desktop` (account `groq_api_key`).
-- Env var `GROQ_API_KEY` is also supported and takes precedence.
-- If save fails with authorization error, unlock the `login` keychain in Keychain Access and retry.
-
-## Launch on Login
+Install launch agent:
 
 ```bash
-bash /path/to/SpeakFlow/scripts/install_launch_agent.sh
+bash /Users/mihiragarwal/Desktop/Whisper/scripts/install_launch_agent.sh
 ```
 
-Remove launch-on-login:
+Uninstall launch agent:
 
 ```bash
-bash /path/to/SpeakFlow/scripts/uninstall_launch_agent.sh
-```
-
-## Tests
-
-```bash
-cd /path/to/SpeakFlow
-python3 -m pytest
+bash /Users/mihiragarwal/Desktop/Whisper/scripts/uninstall_launch_agent.sh
 ```

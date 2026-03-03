@@ -1,0 +1,129 @@
+name: SpeakFlow
+options:
+  createIntermediateGroups: true
+  defaultConfig: Debug
+  deploymentTarget:
+    macOS: "14.0"
+packages:
+  WhisperKit:
+    url: https://github.com/argmaxinc/WhisperKit.git
+    from: 0.15.0
+settings:
+  base:
+    SWIFT_VERSION: 6.0
+targets:
+  Domain:
+    type: framework
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: Sources/Domain
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.speakflow.domain
+        PRODUCT_NAME: Domain
+        DEFINES_MODULE: YES
+        GENERATE_INFOPLIST_FILE: YES
+
+  Infra:
+    type: framework
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: Sources/Infra
+    dependencies:
+      - target: Domain
+      - package: WhisperKit
+        product: WhisperKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.speakflow.infra
+        PRODUCT_NAME: Infra
+        DEFINES_MODULE: YES
+        GENERATE_INFOPLIST_FILE: YES
+
+  Platform:
+    type: framework
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: Sources/Platform
+    dependencies:
+      - target: Domain
+      - target: Infra
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.speakflow.platform
+        PRODUCT_NAME: Platform
+        DEFINES_MODULE: YES
+        GENERATE_INFOPLIST_FILE: YES
+
+  AppLayer:
+    type: framework
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: Sources/AppLayer
+    dependencies:
+      - target: Domain
+      - target: Infra
+      - target: Platform
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.speakflow.applayer
+        PRODUCT_NAME: AppLayer
+        DEFINES_MODULE: YES
+        GENERATE_INFOPLIST_FILE: YES
+
+  SpeakFlow:
+    type: application
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: Sources/SpeakFlowApp
+    dependencies:
+      - target: AppLayer
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.speakflow.desktop
+        PRODUCT_NAME: SpeakFlow
+        INFOPLIST_FILE: Config/SpeakFlow-Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        LD_RUNPATH_SEARCH_PATHS:
+          - "$(inherited)"
+          - "@executable_path/../Frameworks"
+
+  SpeakFlowTests:
+    type: bundle.unit-test
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: Tests/SpeakFlowTests
+    dependencies:
+      - target: Domain
+      - target: Infra
+      - target: Platform
+      - target: SpeakFlow
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.speakflow.tests
+        PRODUCT_NAME: SpeakFlowTests
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  SpeakFlow:
+    build:
+      targets:
+        Domain: all
+        Infra: all
+        Platform: all
+        AppLayer: all
+        SpeakFlow: all
+        SpeakFlowTests: [test]
+    test:
+      targets:
+        - name: SpeakFlowTests
+    run:
+      config: Debug
+    archive:
+      config: Release

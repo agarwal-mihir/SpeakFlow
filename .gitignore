@@ -1,36 +1,17 @@
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
-.venv/
-pip-log.txt
-pip-delete-this-directory.txt
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-.coverage
-.coverage.*
-coverage.xml
-*.log
-
-# Mac
+# macOS
 .DS_Store
-
-# PyInstaller
-build/
-dist/
-*.manifest
-# We are likely tracking SpeakFlow.spec, so we don't ignore *.spec by default, 
-# or we can verify if we want to ignore others. 
-# For now, let's keep specs visible as they are often config.
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
 
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
 
 # Local env / secrets
 .env
@@ -45,3 +26,59 @@ dist/
 # Repository-specific local artifacts
 image.png
 LOCAL_COMMIT_RELEASE_RUNBOOK.md
+
+# Swift / Xcode build artifacts
+swift/SpeakFlow/.build/
+swift/SpeakFlow/.swiftpm/
+swift/SpeakFlow/.deriveddata/
+swift/SpeakFlow/DerivedData/
+swift/SpeakFlow/*.xcodeproj/project.xcworkspace/xcuserdata/
+swift/SpeakFlow/*.xcodeproj/xcuserdata/
+swift/SpeakFlow/*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+dist-swift/
+
+# General Xcode / Swift patterns (catches any nested projects)
+**/DerivedData/
+**/xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved
+Packages/
+
+# Xcode playground
+timeline.xctimeline
+playground.xcworkspace
+
+# CocoaPods (if ever used)
+Pods/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
+# Python (legacy, kept for safety)
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+.venv/
+venv/
+dist/
+build/
+*.spec
+
+# MCP config (global, not project-specific)
+.copilot-mcp.json
+
+# Logs
+*.log

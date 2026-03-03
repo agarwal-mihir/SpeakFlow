@@ -1,0 +1,1144 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		01C904DA96C7AD4A787BD139 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 838671D00D6D40B1933D2AEE /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		026FB77567E40F57F73AF3E8 /* SingleInstanceLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97A0CB8A64CCB85E0BFCFFE /* SingleInstanceLock.swift */; };
+		07D7025B62EB34F585BC0232 /* AudioCaptureService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712441CD0D594AD6D0436F4C /* AudioCaptureService.swift */; };
+		0AA4CDD6BA974930E4162EF0 /* Platform.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78B564187A352EEF54446E00 /* Platform.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0D91C19328ADDD9D50B5B0F0 /* Infra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32BF80FB62B783F515E1B1F9 /* Infra.framework */; };
+		12AF8EB3D1CE9A38F5468A63 /* AutoStartService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF15A705DE4BC972B2FA731E /* AutoStartService.swift */; };
+		1B69F522EEDBAC82AB1A8814 /* FloatingIndicatorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C303D39320E0C500026C9C /* FloatingIndicatorController.swift */; };
+		1B90F7AED52115EB42D8C8A6 /* TextInsertionServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FEF6FAB0A0021901911EAC /* TextInsertionServiceTests.swift */; };
+		207AC20D6FFF27841AFB5A76 /* HistoryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB37F013F035CC4AA3B9AF85 /* HistoryStoreTests.swift */; };
+		2262AFF0BF25C05457CC2DE6 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99E3BD6E803AD1FB9B73BE36 /* Protocols.swift */; };
+		23E540C1B50C79FD7E68E828 /* HotkeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96695D92227224E494277C /* HotkeyService.swift */; };
+		2C772F8F4DAFD9A9F7128495 /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADBB317440097C7F220A672 /* AppLogger.swift */; };
+		34BF8DEEF9E97616DB924705 /* SpeakFlowEntryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C989DA210ED6660187ACCB89 /* SpeakFlowEntryApp.swift */; };
+		37439F1C517976423A6AE551 /* PermissionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0DF5DA588EEB7B401B015C8 /* PermissionService.swift */; };
+		3CB18A7C8E4C0447503373C1 /* AppLayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF72CD8977998C1C14229911 /* AppLayer.framework */; };
+		3E760915FE697FD38D56DFFC /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = 662E89695B025AE67CC019A3 /* WhisperKit */; };
+		4150DAA63AA96EC69BADC898 /* LanguageNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D0573176C76DDCB8198852 /* LanguageNormalizer.swift */; };
+		4C07519C87EF7CD810E613AD /* CleanupServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A65540AB7BE6B1AB5E9446C /* CleanupServiceTests.swift */; };
+		536576148EE9E4C5CC88377B /* AppRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C8F4925635C734E7E358B1 /* AppRuntime.swift */; };
+		54DD4DEB5C9FF0523D825325 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 838671D00D6D40B1933D2AEE /* Domain.framework */; };
+		5AACBE6828EBE85E69A1BD70 /* SecretStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69111BDBDC7CAC5FD9074BB /* SecretStore.swift */; };
+		6074E1FEF25E134AF51D9C29 /* HistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC33494F2F6FA7B96CFE1C0 /* HistoryStore.swift */; };
+		65A8174D4FC861E1E884299F /* Infra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32BF80FB62B783F515E1B1F9 /* Infra.framework */; };
+		75D5EC71050E935D2C8D7D33 /* Platform.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B564187A352EEF54446E00 /* Platform.framework */; };
+		7666D24B3EC4573163075B9C /* SpeakFlowError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B200714274FE40D75E3B2BFE /* SpeakFlowError.swift */; };
+		8CEF69BC5CF293DF38CA11B6 /* AppLayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AF72CD8977998C1C14229911 /* AppLayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8F051B1BAA18DA1C0528C10C /* WhisperKitTranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D176F436AFDD23EECA3FA8EA /* WhisperKitTranscriptionService.swift */; };
+		91D7AB73487DF36925E03B53 /* Paths.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A4F686FAA2884AB6E08EEA /* Paths.swift */; };
+		9427B05D9C6B8A87A9BCF743 /* TextInsertionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E865D34A8A3964B1545BFFC /* TextInsertionService.swift */; };
+		9DE853DC425A5F43DA83E488 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969A363F851C0F0D6C86A64A /* AppDelegate.swift */; };
+		A7D9582FF91BE1810D068310 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = C538FBC4D09EC262643A6788 /* Models.swift */; };
+		A9FBC461BC0052A3F5FCF7A2 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 838671D00D6D40B1933D2AEE /* Domain.framework */; };
+		AC942FD7711186A6CF30C897 /* ConfigStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74190A8885AED845E9435761 /* ConfigStoreTests.swift */; };
+		B039C1A4781C74FFFF438BD5 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F95D4CA85ECCBE18EBBC00F5 /* StatusBarController.swift */; };
+		C4EAB4FF13D34A4328B5EADB /* Platform.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B564187A352EEF54446E00 /* Platform.framework */; };
+		C768CD73EC29B7DCE11B47AE /* TranscriptionPipelineActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13F322A62B949FA5CF0D0460 /* TranscriptionPipelineActor.swift */; };
+		D4D5E56EF7A6EBD1E69BBC78 /* CleanupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8711ED80641EF03285776B31 /* CleanupService.swift */; };
+		D7541FDFD26CB78B6BAE9684 /* ConfigStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73989DC8C8E04F3C2CDD3840 /* ConfigStore.swift */; };
+		D8B31DF144753585C4880BFA /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 838671D00D6D40B1933D2AEE /* Domain.framework */; };
+		D8E7335CB1A7CF7E270C3105 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 838671D00D6D40B1933D2AEE /* Domain.framework */; };
+		D908507DDD1AF88178FC110D /* Infra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32BF80FB62B783F515E1B1F9 /* Infra.framework */; };
+		EF2988910905887B53024CB5 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C15AE916AED903FFA6896F /* RootView.swift */; };
+		F9EB79F0A2CE7DF559643051 /* Infra.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 32BF80FB62B783F515E1B1F9 /* Infra.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FF23EF038CD7960C0CB1FAD9 /* PipelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88756923B22716A20265DD7D /* PipelineTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		18B0D9A2CDE048CA8776AA25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA76AAA5627224AC10D24187 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78002D776589F2F866B12261;
+			remoteInfo = Infra;
+		};
+		40DCF19221A79190E336339B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA76AAA5627224AC10D24187 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EF3B9A58CAA6FEA536E2A3BF;
+			remoteInfo = SpeakFlow;
+		};
+		4383D98E6A546B0D80A603DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA76AAA5627224AC10D24187 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AFED9A1257E5EAD542B63179;
+			remoteInfo = AppLayer;
+		};
+		45050B498735189AD8268892 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA76AAA5627224AC10D24187 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 15A11D6F4C26ABF2FC22ABEB;
+			remoteInfo = Domain;
+		};
+		629C45C1628D52308A65ED41 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA76AAA5627224AC10D24187 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78002D776589F2F866B12261;
+			remoteInfo = Infra;
+		};
+		679E6455B8C8F1DF6C1E8F95 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA76AAA5627224AC10D24187 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E8F7CE796817A024996CE78D;
+			remoteInfo = Platform;
+		};
+		92005C7B81832F686391E29D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA76AAA5627224AC10D24187 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 15A11D6F4C26ABF2FC22ABEB;
+			remoteInfo = Domain;
+		};
+		A544FAB9B1CB743897D6CA97 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA76AAA5627224AC10D24187 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 15A11D6F4C26ABF2FC22ABEB;
+			remoteInfo = Domain;
+		};
+		B081FBA7FB5D0116EF1CA95D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA76AAA5627224AC10D24187 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78002D776589F2F866B12261;
+			remoteInfo = Infra;
+		};
+		C3DF8D7DC92B364A0790FA12 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA76AAA5627224AC10D24187 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 15A11D6F4C26ABF2FC22ABEB;
+			remoteInfo = Domain;
+		};
+		F4086D1FDFBDD347A485D8C7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA76AAA5627224AC10D24187 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E8F7CE796817A024996CE78D;
+			remoteInfo = Platform;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D9FD3307C0C69D2E30C852FB /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				01C904DA96C7AD4A787BD139 /* Domain.framework in Embed Frameworks */,
+				F9EB79F0A2CE7DF559643051 /* Infra.framework in Embed Frameworks */,
+				0AA4CDD6BA974930E4162EF0 /* Platform.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E307255C8B1CDEE7B67B27B4 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8CEF69BC5CF293DF38CA11B6 /* AppLayer.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0AC33494F2F6FA7B96CFE1C0 /* HistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStore.swift; sourceTree = "<group>"; };
+		13F322A62B949FA5CF0D0460 /* TranscriptionPipelineActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionPipelineActor.swift; sourceTree = "<group>"; };
+		30F294CD5E79F8B2932265A1 /* SpeakFlowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpeakFlowTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		32BF80FB62B783F515E1B1F9 /* Infra.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Infra.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A65540AB7BE6B1AB5E9446C /* CleanupServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupServiceTests.swift; sourceTree = "<group>"; };
+		3A96695D92227224E494277C /* HotkeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyService.swift; sourceTree = "<group>"; };
+		6E865D34A8A3964B1545BFFC /* TextInsertionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInsertionService.swift; sourceTree = "<group>"; };
+		712441CD0D594AD6D0436F4C /* AudioCaptureService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCaptureService.swift; sourceTree = "<group>"; };
+		73989DC8C8E04F3C2CDD3840 /* ConfigStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigStore.swift; sourceTree = "<group>"; };
+		74190A8885AED845E9435761 /* ConfigStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigStoreTests.swift; sourceTree = "<group>"; };
+		74C8F4925635C734E7E358B1 /* AppRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRuntime.swift; sourceTree = "<group>"; };
+		78B564187A352EEF54446E00 /* Platform.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Platform.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		81D0573176C76DDCB8198852 /* LanguageNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageNormalizer.swift; sourceTree = "<group>"; };
+		838671D00D6D40B1933D2AEE /* Domain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Domain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8711ED80641EF03285776B31 /* CleanupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupService.swift; sourceTree = "<group>"; };
+		88756923B22716A20265DD7D /* PipelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipelineTests.swift; sourceTree = "<group>"; };
+		969A363F851C0F0D6C86A64A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		99E3BD6E803AD1FB9B73BE36 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
+		A0DF5DA588EEB7B401B015C8 /* PermissionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionService.swift; sourceTree = "<group>"; };
+		A9A4F686FAA2884AB6E08EEA /* Paths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Paths.swift; sourceTree = "<group>"; };
+		A9FEF6FAB0A0021901911EAC /* TextInsertionServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInsertionServiceTests.swift; sourceTree = "<group>"; };
+		AF15A705DE4BC972B2FA731E /* AutoStartService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoStartService.swift; sourceTree = "<group>"; };
+		AF72CD8977998C1C14229911 /* AppLayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AppLayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B200714274FE40D75E3B2BFE /* SpeakFlowError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakFlowError.swift; sourceTree = "<group>"; };
+		B2C303D39320E0C500026C9C /* FloatingIndicatorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingIndicatorController.swift; sourceTree = "<group>"; };
+		B97A0CB8A64CCB85E0BFCFFE /* SingleInstanceLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleInstanceLock.swift; sourceTree = "<group>"; };
+		C538FBC4D09EC262643A6788 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		C69111BDBDC7CAC5FD9074BB /* SecretStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretStore.swift; sourceTree = "<group>"; };
+		C7C15AE916AED903FFA6896F /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		C989DA210ED6660187ACCB89 /* SpeakFlowEntryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakFlowEntryApp.swift; sourceTree = "<group>"; };
+		D176F436AFDD23EECA3FA8EA /* WhisperKitTranscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperKitTranscriptionService.swift; sourceTree = "<group>"; };
+		DADBB317440097C7F220A672 /* AppLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogger.swift; sourceTree = "<group>"; };
+		DB37F013F035CC4AA3B9AF85 /* HistoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStoreTests.swift; sourceTree = "<group>"; };
+		F95D4CA85ECCBE18EBBC00F5 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
+		FDF2FD5DD3B3A0351F0416C8 /* SpeakFlow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeakFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A67B3D5A3E32456F50593DF8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8E7335CB1A7CF7E270C3105 /* Domain.framework in Frameworks */,
+				D908507DDD1AF88178FC110D /* Infra.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AE4C064DFEACB9FCC65BE7E3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CB18A7C8E4C0447503373C1 /* AppLayer.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AEE7D348A165FDD2425D41A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				54DD4DEB5C9FF0523D825325 /* Domain.framework in Frameworks */,
+				0D91C19328ADDD9D50B5B0F0 /* Infra.framework in Frameworks */,
+				C4EAB4FF13D34A4328B5EADB /* Platform.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B260E302A6D1B45698AED532 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9FBC461BC0052A3F5FCF7A2 /* Domain.framework in Frameworks */,
+				65A8174D4FC861E1E884299F /* Infra.framework in Frameworks */,
+				75D5EC71050E935D2C8D7D33 /* Platform.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C54C59C3BDD4398159738987 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8B31DF144753585C4880BFA /* Domain.framework in Frameworks */,
+				3E760915FE697FD38D56DFFC /* WhisperKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		049F9518BA0715BAF0DC8B17 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C7C15AE916AED903FFA6896F /* RootView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1F5428CD4D1FD3FAD4081266 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				C538FBC4D09EC262643A6788 /* Models.swift */,
+				99E3BD6E803AD1FB9B73BE36 /* Protocols.swift */,
+				B200714274FE40D75E3B2BFE /* SpeakFlowError.swift */,
+				13F322A62B949FA5CF0D0460 /* TranscriptionPipelineActor.swift */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		3607FDF57CF7533514F3E896 /* Infra */ = {
+			isa = PBXGroup;
+			children = (
+				DADBB317440097C7F220A672 /* AppLogger.swift */,
+				712441CD0D594AD6D0436F4C /* AudioCaptureService.swift */,
+				8711ED80641EF03285776B31 /* CleanupService.swift */,
+				73989DC8C8E04F3C2CDD3840 /* ConfigStore.swift */,
+				0AC33494F2F6FA7B96CFE1C0 /* HistoryStore.swift */,
+				81D0573176C76DDCB8198852 /* LanguageNormalizer.swift */,
+				A9A4F686FAA2884AB6E08EEA /* Paths.swift */,
+				C69111BDBDC7CAC5FD9074BB /* SecretStore.swift */,
+				D176F436AFDD23EECA3FA8EA /* WhisperKitTranscriptionService.swift */,
+			);
+			path = Infra;
+			sourceTree = "<group>";
+		};
+		3DCAC54ECF5A55BD698580D8 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				6023B60878D6FA853F351A78 /* AppLayer */,
+				1F5428CD4D1FD3FAD4081266 /* Domain */,
+				3607FDF57CF7533514F3E896 /* Infra */,
+				9E3AE04C91302DE732DC75E7 /* Platform */,
+				D81ADC062A60357CE4FA6253 /* SpeakFlowApp */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		6023B60878D6FA853F351A78 /* AppLayer */ = {
+			isa = PBXGroup;
+			children = (
+				969A363F851C0F0D6C86A64A /* AppDelegate.swift */,
+				74C8F4925635C734E7E358B1 /* AppRuntime.swift */,
+				F95D4CA85ECCBE18EBBC00F5 /* StatusBarController.swift */,
+				049F9518BA0715BAF0DC8B17 /* Views */,
+			);
+			path = AppLayer;
+			sourceTree = "<group>";
+		};
+		68E747C0D888C639B1144F18 = {
+			isa = PBXGroup;
+			children = (
+				3DCAC54ECF5A55BD698580D8 /* Sources */,
+				C54B6B8CF4CEAF532A698FAE /* Tests */,
+				AEA00197CDC0F8A2CA56CD4B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9E3AE04C91302DE732DC75E7 /* Platform */ = {
+			isa = PBXGroup;
+			children = (
+				AF15A705DE4BC972B2FA731E /* AutoStartService.swift */,
+				B2C303D39320E0C500026C9C /* FloatingIndicatorController.swift */,
+				3A96695D92227224E494277C /* HotkeyService.swift */,
+				A0DF5DA588EEB7B401B015C8 /* PermissionService.swift */,
+				B97A0CB8A64CCB85E0BFCFFE /* SingleInstanceLock.swift */,
+				6E865D34A8A3964B1545BFFC /* TextInsertionService.swift */,
+			);
+			path = Platform;
+			sourceTree = "<group>";
+		};
+		AEA00197CDC0F8A2CA56CD4B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AF72CD8977998C1C14229911 /* AppLayer.framework */,
+				838671D00D6D40B1933D2AEE /* Domain.framework */,
+				32BF80FB62B783F515E1B1F9 /* Infra.framework */,
+				78B564187A352EEF54446E00 /* Platform.framework */,
+				FDF2FD5DD3B3A0351F0416C8 /* SpeakFlow.app */,
+				30F294CD5E79F8B2932265A1 /* SpeakFlowTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BB10AA641CDBD19CD5754996 /* SpeakFlowTests */ = {
+			isa = PBXGroup;
+			children = (
+				3A65540AB7BE6B1AB5E9446C /* CleanupServiceTests.swift */,
+				74190A8885AED845E9435761 /* ConfigStoreTests.swift */,
+				DB37F013F035CC4AA3B9AF85 /* HistoryStoreTests.swift */,
+				88756923B22716A20265DD7D /* PipelineTests.swift */,
+				A9FEF6FAB0A0021901911EAC /* TextInsertionServiceTests.swift */,
+			);
+			path = SpeakFlowTests;
+			sourceTree = "<group>";
+		};
+		C54B6B8CF4CEAF532A698FAE /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				BB10AA641CDBD19CD5754996 /* SpeakFlowTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		D81ADC062A60357CE4FA6253 /* SpeakFlowApp */ = {
+			isa = PBXGroup;
+			children = (
+				C989DA210ED6660187ACCB89 /* SpeakFlowEntryApp.swift */,
+			);
+			path = SpeakFlowApp;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		15A11D6F4C26ABF2FC22ABEB /* Domain */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C61FCBA7F9007BD55BDACDB /* Build configuration list for PBXNativeTarget "Domain" */;
+			buildPhases = (
+				544BE1E9D456478BEB84CAA0 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Domain;
+			packageProductDependencies = (
+			);
+			productName = Domain;
+			productReference = 838671D00D6D40B1933D2AEE /* Domain.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		6DC5FDA715A17D5EFFC1D354 /* SpeakFlowTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AC0DEC3478420E935DE51B3E /* Build configuration list for PBXNativeTarget "SpeakFlowTests" */;
+			buildPhases = (
+				9440B8A029538D73E9539B30 /* Sources */,
+				AEE7D348A165FDD2425D41A4 /* Frameworks */,
+				D9FD3307C0C69D2E30C852FB /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6706B49D8B397611F6C347D1 /* PBXTargetDependency */,
+				07DE31725665C2A1EFD8B516 /* PBXTargetDependency */,
+				CA346E599FC16FD851F153AD /* PBXTargetDependency */,
+				C931A05D69F200AA6C364626 /* PBXTargetDependency */,
+			);
+			name = SpeakFlowTests;
+			packageProductDependencies = (
+			);
+			productName = SpeakFlowTests;
+			productReference = 30F294CD5E79F8B2932265A1 /* SpeakFlowTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		78002D776589F2F866B12261 /* Infra */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7D53EFCD9CB576A8C66EE27F /* Build configuration list for PBXNativeTarget "Infra" */;
+			buildPhases = (
+				5FA6192067270CE3477BC62F /* Sources */,
+				C54C59C3BDD4398159738987 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2BCBB6E6366749EDE5DFE36F /* PBXTargetDependency */,
+			);
+			name = Infra;
+			packageProductDependencies = (
+				662E89695B025AE67CC019A3 /* WhisperKit */,
+			);
+			productName = Infra;
+			productReference = 32BF80FB62B783F515E1B1F9 /* Infra.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		AFED9A1257E5EAD542B63179 /* AppLayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3E23DC48DDC3EBDD74BB1187 /* Build configuration list for PBXNativeTarget "AppLayer" */;
+			buildPhases = (
+				13A61BC9F5E1B1409265064D /* Sources */,
+				B260E302A6D1B45698AED532 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9AD8066AF6B6878617DC675B /* PBXTargetDependency */,
+				9F4EDEEEEE7705D7495D89C0 /* PBXTargetDependency */,
+				03ADAD681554F5B9675F170E /* PBXTargetDependency */,
+			);
+			name = AppLayer;
+			packageProductDependencies = (
+			);
+			productName = AppLayer;
+			productReference = AF72CD8977998C1C14229911 /* AppLayer.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		E8F7CE796817A024996CE78D /* Platform */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BA4E9E80C6953CEFA5B17EC3 /* Build configuration list for PBXNativeTarget "Platform" */;
+			buildPhases = (
+				E7D35371A64F99309E300E67 /* Sources */,
+				A67B3D5A3E32456F50593DF8 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C5B4955639D0F89DF4DF5A03 /* PBXTargetDependency */,
+				417320D9A46359CD947F6EE1 /* PBXTargetDependency */,
+			);
+			name = Platform;
+			packageProductDependencies = (
+			);
+			productName = Platform;
+			productReference = 78B564187A352EEF54446E00 /* Platform.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		EF3B9A58CAA6FEA536E2A3BF /* SpeakFlow */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F9620526C7EC942FDA694D83 /* Build configuration list for PBXNativeTarget "SpeakFlow" */;
+			buildPhases = (
+				1648BEEC56BB9DC1A61BD344 /* Sources */,
+				AE4C064DFEACB9FCC65BE7E3 /* Frameworks */,
+				E307255C8B1CDEE7B67B27B4 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F91425526FD509378D85AFB8 /* PBXTargetDependency */,
+			);
+			name = SpeakFlow;
+			packageProductDependencies = (
+			);
+			productName = SpeakFlow;
+			productReference = FDF2FD5DD3B3A0351F0416C8 /* SpeakFlow.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EA76AAA5627224AC10D24187 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+			};
+			buildConfigurationList = 394B37E367AD480772EF1C0A /* Build configuration list for PBXProject "SpeakFlow" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 68E747C0D888C639B1144F18;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				D574679B1FC07C2BD751FB03 /* XCRemoteSwiftPackageReference "WhisperKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AFED9A1257E5EAD542B63179 /* AppLayer */,
+				15A11D6F4C26ABF2FC22ABEB /* Domain */,
+				78002D776589F2F866B12261 /* Infra */,
+				E8F7CE796817A024996CE78D /* Platform */,
+				EF3B9A58CAA6FEA536E2A3BF /* SpeakFlow */,
+				6DC5FDA715A17D5EFFC1D354 /* SpeakFlowTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		13A61BC9F5E1B1409265064D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9DE853DC425A5F43DA83E488 /* AppDelegate.swift in Sources */,
+				536576148EE9E4C5CC88377B /* AppRuntime.swift in Sources */,
+				EF2988910905887B53024CB5 /* RootView.swift in Sources */,
+				B039C1A4781C74FFFF438BD5 /* StatusBarController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1648BEEC56BB9DC1A61BD344 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				34BF8DEEF9E97616DB924705 /* SpeakFlowEntryApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		544BE1E9D456478BEB84CAA0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A7D9582FF91BE1810D068310 /* Models.swift in Sources */,
+				2262AFF0BF25C05457CC2DE6 /* Protocols.swift in Sources */,
+				7666D24B3EC4573163075B9C /* SpeakFlowError.swift in Sources */,
+				C768CD73EC29B7DCE11B47AE /* TranscriptionPipelineActor.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5FA6192067270CE3477BC62F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C772F8F4DAFD9A9F7128495 /* AppLogger.swift in Sources */,
+				07D7025B62EB34F585BC0232 /* AudioCaptureService.swift in Sources */,
+				D4D5E56EF7A6EBD1E69BBC78 /* CleanupService.swift in Sources */,
+				D7541FDFD26CB78B6BAE9684 /* ConfigStore.swift in Sources */,
+				6074E1FEF25E134AF51D9C29 /* HistoryStore.swift in Sources */,
+				4150DAA63AA96EC69BADC898 /* LanguageNormalizer.swift in Sources */,
+				91D7AB73487DF36925E03B53 /* Paths.swift in Sources */,
+				5AACBE6828EBE85E69A1BD70 /* SecretStore.swift in Sources */,
+				8F051B1BAA18DA1C0528C10C /* WhisperKitTranscriptionService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9440B8A029538D73E9539B30 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C07519C87EF7CD810E613AD /* CleanupServiceTests.swift in Sources */,
+				AC942FD7711186A6CF30C897 /* ConfigStoreTests.swift in Sources */,
+				207AC20D6FFF27841AFB5A76 /* HistoryStoreTests.swift in Sources */,
+				FF23EF038CD7960C0CB1FAD9 /* PipelineTests.swift in Sources */,
+				1B90F7AED52115EB42D8C8A6 /* TextInsertionServiceTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E7D35371A64F99309E300E67 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				12AF8EB3D1CE9A38F5468A63 /* AutoStartService.swift in Sources */,
+				1B69F522EEDBAC82AB1A8814 /* FloatingIndicatorController.swift in Sources */,
+				23E540C1B50C79FD7E68E828 /* HotkeyService.swift in Sources */,
+				37439F1C517976423A6AE551 /* PermissionService.swift in Sources */,
+				026FB77567E40F57F73AF3E8 /* SingleInstanceLock.swift in Sources */,
+				9427B05D9C6B8A87A9BCF743 /* TextInsertionService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		03ADAD681554F5B9675F170E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E8F7CE796817A024996CE78D /* Platform */;
+			targetProxy = F4086D1FDFBDD347A485D8C7 /* PBXContainerItemProxy */;
+		};
+		07DE31725665C2A1EFD8B516 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78002D776589F2F866B12261 /* Infra */;
+			targetProxy = 629C45C1628D52308A65ED41 /* PBXContainerItemProxy */;
+		};
+		2BCBB6E6366749EDE5DFE36F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 15A11D6F4C26ABF2FC22ABEB /* Domain */;
+			targetProxy = 92005C7B81832F686391E29D /* PBXContainerItemProxy */;
+		};
+		417320D9A46359CD947F6EE1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78002D776589F2F866B12261 /* Infra */;
+			targetProxy = 18B0D9A2CDE048CA8776AA25 /* PBXContainerItemProxy */;
+		};
+		6706B49D8B397611F6C347D1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 15A11D6F4C26ABF2FC22ABEB /* Domain */;
+			targetProxy = C3DF8D7DC92B364A0790FA12 /* PBXContainerItemProxy */;
+		};
+		9AD8066AF6B6878617DC675B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 15A11D6F4C26ABF2FC22ABEB /* Domain */;
+			targetProxy = 45050B498735189AD8268892 /* PBXContainerItemProxy */;
+		};
+		9F4EDEEEEE7705D7495D89C0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78002D776589F2F866B12261 /* Infra */;
+			targetProxy = B081FBA7FB5D0116EF1CA95D /* PBXContainerItemProxy */;
+		};
+		C5B4955639D0F89DF4DF5A03 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 15A11D6F4C26ABF2FC22ABEB /* Domain */;
+			targetProxy = A544FAB9B1CB743897D6CA97 /* PBXContainerItemProxy */;
+		};
+		C931A05D69F200AA6C364626 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EF3B9A58CAA6FEA536E2A3BF /* SpeakFlow */;
+			targetProxy = 40DCF19221A79190E336339B /* PBXContainerItemProxy */;
+		};
+		CA346E599FC16FD851F153AD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E8F7CE796817A024996CE78D /* Platform */;
+			targetProxy = 679E6455B8C8F1DF6C1E8F95 /* PBXContainerItemProxy */;
+		};
+		F91425526FD509378D85AFB8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AFED9A1257E5EAD542B63179 /* AppLayer */;
+			targetProxy = 4383D98E6A546B0D80A603DF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		09001FECE4B0DA21B86FF95E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.tests;
+				PRODUCT_NAME = SpeakFlowTests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SpeakFlow.app/Contents/MacOS/SpeakFlow";
+			};
+			name = Debug;
+		};
+		33DE9BDAE52EE073BB56B11C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "Config/SpeakFlow-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.desktop;
+				PRODUCT_NAME = SpeakFlow;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		46DA474B13A628B82A026C50 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.domain;
+				PRODUCT_NAME = Domain;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		48E7C9C114B5E9EE2390659A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		496502BAEE1F90CB1491E2A6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.domain;
+				PRODUCT_NAME = Domain;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		6ABA86DC038196C159311F47 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.applayer;
+				PRODUCT_NAME = AppLayer;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		7908E5C3B389E8BF81727998 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.platform;
+				PRODUCT_NAME = Platform;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		837FC671BE7AAE87313119F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.tests;
+				PRODUCT_NAME = SpeakFlowTests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SpeakFlow.app/Contents/MacOS/SpeakFlow";
+			};
+			name = Release;
+		};
+		B7B3D92BA0798BDEA740569C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.infra;
+				PRODUCT_NAME = Infra;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		C985530759F59FAACB874D38 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.infra;
+				PRODUCT_NAME = Infra;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		D08C18739F3EAD9599F43EFA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.platform;
+				PRODUCT_NAME = Platform;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		E61DBE9C845E1EE824D3E6F1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.applayer;
+				PRODUCT_NAME = AppLayer;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		F7FC88FCD0F6BED7EDE2619E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "Config/SpeakFlow-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.desktop;
+				PRODUCT_NAME = SpeakFlow;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		FBC870A25898BA9E23F56648 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0C61FCBA7F9007BD55BDACDB /* Build configuration list for PBXNativeTarget "Domain" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				46DA474B13A628B82A026C50 /* Debug */,
+				496502BAEE1F90CB1491E2A6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		394B37E367AD480772EF1C0A /* Build configuration list for PBXProject "SpeakFlow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FBC870A25898BA9E23F56648 /* Debug */,
+				48E7C9C114B5E9EE2390659A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3E23DC48DDC3EBDD74BB1187 /* Build configuration list for PBXNativeTarget "AppLayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6ABA86DC038196C159311F47 /* Debug */,
+				E61DBE9C845E1EE824D3E6F1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7D53EFCD9CB576A8C66EE27F /* Build configuration list for PBXNativeTarget "Infra" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B7B3D92BA0798BDEA740569C /* Debug */,
+				C985530759F59FAACB874D38 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AC0DEC3478420E935DE51B3E /* Build configuration list for PBXNativeTarget "SpeakFlowTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				09001FECE4B0DA21B86FF95E /* Debug */,
+				837FC671BE7AAE87313119F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BA4E9E80C6953CEFA5B17EC3 /* Build configuration list for PBXNativeTarget "Platform" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D08C18739F3EAD9599F43EFA /* Debug */,
+				7908E5C3B389E8BF81727998 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F9620526C7EC942FDA694D83 /* Build configuration list for PBXNativeTarget "SpeakFlow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				33DE9BDAE52EE073BB56B11C /* Debug */,
+				F7FC88FCD0F6BED7EDE2619E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D574679B1FC07C2BD751FB03 /* XCRemoteSwiftPackageReference "WhisperKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/argmaxinc/WhisperKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.15.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		662E89695B025AE67CC019A3 /* WhisperKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D574679B1FC07C2BD751FB03 /* XCRemoteSwiftPackageReference "WhisperKit" */;
+			productName = WhisperKit;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = EA76AAA5627224AC10D24187 /* Project object */;
+}
