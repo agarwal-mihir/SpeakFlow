@@ -27,6 +27,7 @@
 		4C07519C87EF7CD810E613AD /* CleanupServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A65540AB7BE6B1AB5E9446C /* CleanupServiceTests.swift */; };
 		536576148EE9E4C5CC88377B /* AppRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C8F4925635C734E7E358B1 /* AppRuntime.swift */; };
 		54DD4DEB5C9FF0523D825325 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 838671D00D6D40B1933D2AEE /* Domain.framework */; };
+		594C7A01BB638A1B57C6AA59 /* ViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501E0673F9483352E36BAD16 /* ViewModifiers.swift */; };
 		5AACBE6828EBE85E69A1BD70 /* SecretStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69111BDBDC7CAC5FD9074BB /* SecretStore.swift */; };
 		6074E1FEF25E134AF51D9C29 /* HistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC33494F2F6FA7B96CFE1C0 /* HistoryStore.swift */; };
 		65A8174D4FC861E1E884299F /* Infra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32BF80FB62B783F515E1B1F9 /* Infra.framework */; };
@@ -41,6 +42,9 @@
 		A9FBC461BC0052A3F5FCF7A2 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 838671D00D6D40B1933D2AEE /* Domain.framework */; };
 		AC942FD7711186A6CF30C897 /* ConfigStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74190A8885AED845E9435761 /* ConfigStoreTests.swift */; };
 		B039C1A4781C74FFFF438BD5 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F95D4CA85ECCBE18EBBC00F5 /* StatusBarController.swift */; };
+		B588E482540F5CD1CF66B80E /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58D791052FB9ABD1B7149A7 /* HomeView.swift */; };
+		BE298231077156CA6662AEEC /* PermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6C69F423AB92C05DA4CEBE /* PermissionsView.swift */; };
+		C3E5BA04424FA84F745D2FFE /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024BBAD9834040A4B349A336 /* SettingsView.swift */; };
 		C4EAB4FF13D34A4328B5EADB /* Platform.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B564187A352EEF54446E00 /* Platform.framework */; };
 		C768CD73EC29B7DCE11B47AE /* TranscriptionPipelineActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13F322A62B949FA5CF0D0460 /* TranscriptionPipelineActor.swift */; };
 		D4D5E56EF7A6EBD1E69BBC78 /* CleanupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8711ED80641EF03285776B31 /* CleanupService.swift */; };
@@ -49,6 +53,7 @@
 		D8E7335CB1A7CF7E270C3105 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 838671D00D6D40B1933D2AEE /* Domain.framework */; };
 		D908507DDD1AF88178FC110D /* Infra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32BF80FB62B783F515E1B1F9 /* Infra.framework */; };
 		EF2988910905887B53024CB5 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C15AE916AED903FFA6896F /* RootView.swift */; };
+		F6B885F32D6EF662307B3038 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49F28F28F9E3628903604 /* HistoryView.swift */; };
 		F9EB79F0A2CE7DF559643051 /* Infra.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 32BF80FB62B783F515E1B1F9 /* Infra.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FF23EF038CD7960C0CB1FAD9 /* PipelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88756923B22716A20265DD7D /* PipelineTests.swift */; };
 /* End PBXBuildFile section */
@@ -161,12 +166,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		024BBAD9834040A4B349A336 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		0AC33494F2F6FA7B96CFE1C0 /* HistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStore.swift; sourceTree = "<group>"; };
+		0EE49F28F28F9E3628903604 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		13F322A62B949FA5CF0D0460 /* TranscriptionPipelineActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionPipelineActor.swift; sourceTree = "<group>"; };
 		30F294CD5E79F8B2932265A1 /* SpeakFlowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpeakFlowTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		32BF80FB62B783F515E1B1F9 /* Infra.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Infra.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A65540AB7BE6B1AB5E9446C /* CleanupServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupServiceTests.swift; sourceTree = "<group>"; };
 		3A96695D92227224E494277C /* HotkeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyService.swift; sourceTree = "<group>"; };
+		501E0673F9483352E36BAD16 /* ViewModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifiers.swift; sourceTree = "<group>"; };
 		6E865D34A8A3964B1545BFFC /* TextInsertionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInsertionService.swift; sourceTree = "<group>"; };
 		712441CD0D594AD6D0436F4C /* AudioCaptureService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCaptureService.swift; sourceTree = "<group>"; };
 		73989DC8C8E04F3C2CDD3840 /* ConfigStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigStore.swift; sourceTree = "<group>"; };
@@ -177,6 +185,7 @@
 		838671D00D6D40B1933D2AEE /* Domain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Domain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8711ED80641EF03285776B31 /* CleanupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupService.swift; sourceTree = "<group>"; };
 		88756923B22716A20265DD7D /* PipelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipelineTests.swift; sourceTree = "<group>"; };
+		8E6C69F423AB92C05DA4CEBE /* PermissionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsView.swift; sourceTree = "<group>"; };
 		969A363F851C0F0D6C86A64A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		99E3BD6E803AD1FB9B73BE36 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		A0DF5DA588EEB7B401B015C8 /* PermissionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionService.swift; sourceTree = "<group>"; };
@@ -186,6 +195,7 @@
 		AF72CD8977998C1C14229911 /* AppLayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AppLayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B200714274FE40D75E3B2BFE /* SpeakFlowError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakFlowError.swift; sourceTree = "<group>"; };
 		B2C303D39320E0C500026C9C /* FloatingIndicatorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingIndicatorController.swift; sourceTree = "<group>"; };
+		B58D791052FB9ABD1B7149A7 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		B97A0CB8A64CCB85E0BFCFFE /* SingleInstanceLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleInstanceLock.swift; sourceTree = "<group>"; };
 		C538FBC4D09EC262643A6788 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		C69111BDBDC7CAC5FD9074BB /* SecretStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretStore.swift; sourceTree = "<group>"; };
@@ -251,7 +261,12 @@
 		049F9518BA0715BAF0DC8B17 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0EE49F28F28F9E3628903604 /* HistoryView.swift */,
+				B58D791052FB9ABD1B7149A7 /* HomeView.swift */,
+				8E6C69F423AB92C05DA4CEBE /* PermissionsView.swift */,
 				C7C15AE916AED903FFA6896F /* RootView.swift */,
+				024BBAD9834040A4B349A336 /* SettingsView.swift */,
+				501E0673F9483352E36BAD16 /* ViewModifiers.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -536,8 +551,13 @@
 			files = (
 				9DE853DC425A5F43DA83E488 /* AppDelegate.swift in Sources */,
 				536576148EE9E4C5CC88377B /* AppRuntime.swift in Sources */,
+				F6B885F32D6EF662307B3038 /* HistoryView.swift in Sources */,
+				B588E482540F5CD1CF66B80E /* HomeView.swift in Sources */,
+				BE298231077156CA6662AEEC /* PermissionsView.swift in Sources */,
 				EF2988910905887B53024CB5 /* RootView.swift in Sources */,
+				C3E5BA04424FA84F745D2FFE /* SettingsView.swift in Sources */,
 				B039C1A4781C74FFFF438BD5 /* StatusBarController.swift in Sources */,
+				594C7A01BB638A1B57C6AA59 /* ViewModifiers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -673,7 +693,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.tests;
 				PRODUCT_NAME = SpeakFlowTests;
 				SDKROOT = macosx;
@@ -691,7 +711,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.desktop;
 				PRODUCT_NAME = SpeakFlow;
 				SDKROOT = macosx;
@@ -714,7 +734,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.domain;
 				PRODUCT_NAME = Domain;
 				SDKROOT = macosx;
@@ -768,14 +788,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 6.0;
+				SWIFT_VERSION = 6.2;
 			};
 			name = Release;
 		};
@@ -795,7 +815,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.domain;
 				PRODUCT_NAME = Domain;
 				SDKROOT = macosx;
@@ -820,7 +840,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.applayer;
 				PRODUCT_NAME = AppLayer;
 				SDKROOT = macosx;
@@ -845,7 +865,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.platform;
 				PRODUCT_NAME = Platform;
 				SDKROOT = macosx;
@@ -865,7 +885,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.tests;
 				PRODUCT_NAME = SpeakFlowTests;
 				SDKROOT = macosx;
@@ -889,7 +909,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.infra;
 				PRODUCT_NAME = Infra;
 				SDKROOT = macosx;
@@ -914,7 +934,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.infra;
 				PRODUCT_NAME = Infra;
 				SDKROOT = macosx;
@@ -939,7 +959,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.platform;
 				PRODUCT_NAME = Platform;
 				SDKROOT = macosx;
@@ -964,7 +984,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.applayer;
 				PRODUCT_NAME = AppLayer;
 				SDKROOT = macosx;
@@ -983,7 +1003,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.speakflow.desktop;
 				PRODUCT_NAME = SpeakFlow;
 				SDKROOT = macosx;
@@ -1041,7 +1061,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1049,7 +1069,7 @@
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 6.0;
+				SWIFT_VERSION = 6.2;
 			};
 			name = Debug;
 		};
