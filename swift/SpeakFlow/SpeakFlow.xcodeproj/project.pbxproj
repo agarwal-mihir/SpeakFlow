@@ -13,6 +13,7 @@
 		07D7025B62EB34F585BC0232 /* AudioCaptureService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712441CD0D594AD6D0436F4C /* AudioCaptureService.swift */; };
 		0AA4CDD6BA974930E4162EF0 /* Platform.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78B564187A352EEF54446E00 /* Platform.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0D91C19328ADDD9D50B5B0F0 /* Infra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32BF80FB62B783F515E1B1F9 /* Infra.framework */; };
+		0E5C95FB1120378290997C50 /* AudioVisualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638926BCA614C25FF0D51B9A /* AudioVisualizerView.swift */; };
 		11309D327BF0818BA886B484 /* Platform.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78B564187A352EEF54446E00 /* Platform.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		12AF8EB3D1CE9A38F5468A63 /* AutoStartService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF15A705DE4BC972B2FA731E /* AutoStartService.swift */; };
 		1B69F522EEDBAC82AB1A8814 /* FloatingIndicatorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C303D39320E0C500026C9C /* FloatingIndicatorController.swift */; };
@@ -205,6 +206,7 @@
 		3A65540AB7BE6B1AB5E9446C /* CleanupServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupServiceTests.swift; sourceTree = "<group>"; };
 		3A96695D92227224E494277C /* HotkeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyService.swift; sourceTree = "<group>"; };
 		501E0673F9483352E36BAD16 /* ViewModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifiers.swift; sourceTree = "<group>"; };
+		638926BCA614C25FF0D51B9A /* AudioVisualizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioVisualizerView.swift; sourceTree = "<group>"; };
 		6E865D34A8A3964B1545BFFC /* TextInsertionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInsertionService.swift; sourceTree = "<group>"; };
 		712441CD0D594AD6D0436F4C /* AudioCaptureService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCaptureService.swift; sourceTree = "<group>"; };
 		73989DC8C8E04F3C2CDD3840 /* ConfigStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigStore.swift; sourceTree = "<group>"; };
@@ -294,6 +296,7 @@
 		049F9518BA0715BAF0DC8B17 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				638926BCA614C25FF0D51B9A /* AudioVisualizerView.swift */,
 				0EE49F28F28F9E3628903604 /* HistoryView.swift */,
 				B58D791052FB9ABD1B7149A7 /* HomeView.swift */,
 				8E6C69F423AB92C05DA4CEBE /* PermissionsView.swift */,
@@ -587,6 +590,7 @@
 			files = (
 				9DE853DC425A5F43DA83E488 /* AppDelegate.swift in Sources */,
 				536576148EE9E4C5CC88377B /* AppRuntime.swift in Sources */,
+				0E5C95FB1120378290997C50 /* AudioVisualizerView.swift in Sources */,
 				F6B885F32D6EF662307B3038 /* HistoryView.swift in Sources */,
 				B588E482540F5CD1CF66B80E /* HomeView.swift in Sources */,
 				BE298231077156CA6662AEEC /* PermissionsView.swift in Sources */,

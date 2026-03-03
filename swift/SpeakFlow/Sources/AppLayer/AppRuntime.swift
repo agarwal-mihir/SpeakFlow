@@ -16,6 +16,7 @@ public final class AppRuntime: ObservableObject {
     @Published public var historyQuery = ""
     @Published public var historyStats = HistoryStats(totalCount: 0, latestCreatedAt: "", latestSourceApp: "Unknown", topSourceApp: "Unknown", topSourceAppCount: 0)
     @Published public var config: AppConfig
+    @Published public var audioLevel: Float = 0
 
     private let configStore: JSONConfigStore
     private let historyStore: SQLiteHistoryStore
@@ -360,7 +361,9 @@ public final class AppRuntime: ObservableObject {
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 guard self.state == .recording else { return }
-                self.updateIndicator(.recording(level: self.audioService.currentLiveLevel()))
+                let level = self.audioService.currentLiveLevel()
+                self.audioLevel = level
+                self.updateIndicator(.recording(level: level))
             }
         }
     }
@@ -368,6 +371,7 @@ public final class AppRuntime: ObservableObject {
     private func stopMeterUpdates() {
         meterTimer?.invalidate()
         meterTimer = nil
+        audioLevel = 0
     }
 
     private func onHotkeyPress() {

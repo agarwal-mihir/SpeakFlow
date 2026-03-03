@@ -7,6 +7,7 @@ import Foundation
 
 public final class WhisperKitTranscriptionService: SpeechTranscriptionServiceProtocol, @unchecked Sendable {
     private let modelName: String
+    private nonisolated(unsafe) var cachedWhisper: Any?
 
     public init(modelName: String = "large-v3") {
         self.modelName = modelName
@@ -18,16 +19,24 @@ public final class WhisperKitTranscriptionService: SpeechTranscriptionServicePro
         }
 
         #if canImport(WhisperKit)
-        let whisperConfig = WhisperKitConfig(
-            model: modelName,
-            verbose: false,
-            logLevel: .error,
-            prewarm: true,
-            load: true,
-            download: true,
-            useBackgroundDownloadSession: false
-        )
-        let whisper = try await WhisperKit(whisperConfig)
+        let whisper: WhisperKit
+        if let existing = cachedWhisper as? WhisperKit {
+            whisper = existing
+        } else {
+            let whisperConfig = WhisperKitConfig(
+                model: modelName,
+                verbose: false,
+                logLevel: .error,
+                prewarm: true,
+                load: true,
+                download: true,
+                useBackgroundDownloadSession: false
+            )
+            let instance = try await WhisperKit(whisperConfig)
+            cachedWhisper = instance
+            whisper = instance
+        }
+
         let decode = DecodingOptions(
             verbose: false,
             task: .transcribe,

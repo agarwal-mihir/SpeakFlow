@@ -80,6 +80,29 @@ struct HomeView: View {
             Label("Quick Controls", systemImage: "slider.horizontal.3")
                 .font(.title3.bold())
 
+            if runtime.state == .recording {
+                VStack(spacing: 6) {
+                    AudioVisualizerView(
+                        level: runtime.audioLevel,
+                        barCount: 32,
+                        isActive: true
+                    )
+                    Text("Recording…")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.green)
+                }
+                .padding(.vertical, 4)
+            } else if runtime.state == .transcribing {
+                HStack(spacing: 8) {
+                    ProgressView()
+                        .controlSize(.small)
+                    Text("Transcribing…")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.orange)
+                }
+                .padding(.vertical, 4)
+            }
+
             Toggle("Service enabled", isOn: Binding(
                 get: { runtime.serviceEnabled },
                 set: { runtime.setServiceEnabled($0) }
