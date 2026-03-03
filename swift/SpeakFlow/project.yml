@@ -83,6 +83,13 @@ targets:
       - path: Sources/SpeakFlowApp
     dependencies:
       - target: AppLayer
+        embed: true
+      - target: Domain
+        embed: true
+      - target: Infra
+        embed: true
+      - target: Platform
+        embed: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.speakflow.desktop

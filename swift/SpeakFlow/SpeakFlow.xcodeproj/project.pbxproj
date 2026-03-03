@@ -8,10 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		01C904DA96C7AD4A787BD139 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 838671D00D6D40B1933D2AEE /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0213C702D62A03F4F46F9A0F /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 838671D00D6D40B1933D2AEE /* Domain.framework */; };
 		026FB77567E40F57F73AF3E8 /* SingleInstanceLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97A0CB8A64CCB85E0BFCFFE /* SingleInstanceLock.swift */; };
 		07D7025B62EB34F585BC0232 /* AudioCaptureService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712441CD0D594AD6D0436F4C /* AudioCaptureService.swift */; };
 		0AA4CDD6BA974930E4162EF0 /* Platform.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78B564187A352EEF54446E00 /* Platform.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0D91C19328ADDD9D50B5B0F0 /* Infra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32BF80FB62B783F515E1B1F9 /* Infra.framework */; };
+		11309D327BF0818BA886B484 /* Platform.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78B564187A352EEF54446E00 /* Platform.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		12AF8EB3D1CE9A38F5468A63 /* AutoStartService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF15A705DE4BC972B2FA731E /* AutoStartService.swift */; };
 		1B69F522EEDBAC82AB1A8814 /* FloatingIndicatorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C303D39320E0C500026C9C /* FloatingIndicatorController.swift */; };
 		1B90F7AED52115EB42D8C8A6 /* TextInsertionServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FEF6FAB0A0021901911EAC /* TextInsertionServiceTests.swift */; };
@@ -33,6 +35,8 @@
 		65A8174D4FC861E1E884299F /* Infra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32BF80FB62B783F515E1B1F9 /* Infra.framework */; };
 		75D5EC71050E935D2C8D7D33 /* Platform.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B564187A352EEF54446E00 /* Platform.framework */; };
 		7666D24B3EC4573163075B9C /* SpeakFlowError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B200714274FE40D75E3B2BFE /* SpeakFlowError.swift */; };
+		79C9828D104B11D890AC8F07 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 838671D00D6D40B1933D2AEE /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		884853FC3E354D92A489753D /* Infra.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 32BF80FB62B783F515E1B1F9 /* Infra.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8CEF69BC5CF293DF38CA11B6 /* AppLayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AF72CD8977998C1C14229911 /* AppLayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8F051B1BAA18DA1C0528C10C /* WhisperKitTranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D176F436AFDD23EECA3FA8EA /* WhisperKitTranscriptionService.swift */; };
 		91D7AB73487DF36925E03B53 /* Paths.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A4F686FAA2884AB6E08EEA /* Paths.swift */; };
@@ -47,18 +51,27 @@
 		C3E5BA04424FA84F745D2FFE /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024BBAD9834040A4B349A336 /* SettingsView.swift */; };
 		C4EAB4FF13D34A4328B5EADB /* Platform.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B564187A352EEF54446E00 /* Platform.framework */; };
 		C768CD73EC29B7DCE11B47AE /* TranscriptionPipelineActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13F322A62B949FA5CF0D0460 /* TranscriptionPipelineActor.swift */; };
+		D4CF02A09BA036F8EE83681B /* Platform.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B564187A352EEF54446E00 /* Platform.framework */; };
 		D4D5E56EF7A6EBD1E69BBC78 /* CleanupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8711ED80641EF03285776B31 /* CleanupService.swift */; };
 		D7541FDFD26CB78B6BAE9684 /* ConfigStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73989DC8C8E04F3C2CDD3840 /* ConfigStore.swift */; };
 		D8B31DF144753585C4880BFA /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 838671D00D6D40B1933D2AEE /* Domain.framework */; };
 		D8E7335CB1A7CF7E270C3105 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 838671D00D6D40B1933D2AEE /* Domain.framework */; };
 		D908507DDD1AF88178FC110D /* Infra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32BF80FB62B783F515E1B1F9 /* Infra.framework */; };
 		EF2988910905887B53024CB5 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C15AE916AED903FFA6896F /* RootView.swift */; };
+		F2BF3CFF2099F4561577B9F3 /* Infra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32BF80FB62B783F515E1B1F9 /* Infra.framework */; };
 		F6B885F32D6EF662307B3038 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49F28F28F9E3628903604 /* HistoryView.swift */; };
 		F9EB79F0A2CE7DF559643051 /* Infra.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 32BF80FB62B783F515E1B1F9 /* Infra.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FF23EF038CD7960C0CB1FAD9 /* PipelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88756923B22716A20265DD7D /* PipelineTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		147BF5732633ED910F60F7E7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA76AAA5627224AC10D24187 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E8F7CE796817A024996CE78D;
+			remoteInfo = Platform;
+		};
 		18B0D9A2CDE048CA8776AA25 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EA76AAA5627224AC10D24187 /* Project object */;
@@ -101,6 +114,13 @@
 			remoteGlobalIDString = E8F7CE796817A024996CE78D;
 			remoteInfo = Platform;
 		};
+		6AE404785D0E3412C6AFEA6F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA76AAA5627224AC10D24187 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 15A11D6F4C26ABF2FC22ABEB;
+			remoteInfo = Domain;
+		};
 		92005C7B81832F686391E29D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EA76AAA5627224AC10D24187 /* Project object */;
@@ -114,6 +134,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 15A11D6F4C26ABF2FC22ABEB;
 			remoteInfo = Domain;
+		};
+		AF24F2A45A4B35BF875314AC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA76AAA5627224AC10D24187 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78002D776589F2F866B12261;
+			remoteInfo = Infra;
 		};
 		B081FBA7FB5D0116EF1CA95D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -159,6 +186,9 @@
 			dstSubfolderSpec = 10;
 			files = (
 				8CEF69BC5CF293DF38CA11B6 /* AppLayer.framework in Embed Frameworks */,
+				79C9828D104B11D890AC8F07 /* Domain.framework in Embed Frameworks */,
+				884853FC3E354D92A489753D /* Infra.framework in Embed Frameworks */,
+				11309D327BF0818BA886B484 /* Platform.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -223,6 +253,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				3CB18A7C8E4C0447503373C1 /* AppLayer.framework in Frameworks */,
+				0213C702D62A03F4F46F9A0F /* Domain.framework in Frameworks */,
+				F2BF3CFF2099F4561577B9F3 /* Infra.framework in Frameworks */,
+				D4CF02A09BA036F8EE83681B /* Platform.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -500,6 +533,9 @@
 			);
 			dependencies = (
 				F91425526FD509378D85AFB8 /* PBXTargetDependency */,
+				FEDD084711C3775ADA0DBB30 /* PBXTargetDependency */,
+				0687201684A51170B895AA70 /* PBXTargetDependency */,
+				013737BBA7FD5FA53718C969 /* PBXTargetDependency */,
 			);
 			name = SpeakFlow;
 			packageProductDependencies = (
@@ -624,10 +660,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		013737BBA7FD5FA53718C969 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E8F7CE796817A024996CE78D /* Platform */;
+			targetProxy = 147BF5732633ED910F60F7E7 /* PBXContainerItemProxy */;
+		};
 		03ADAD681554F5B9675F170E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E8F7CE796817A024996CE78D /* Platform */;
 			targetProxy = F4086D1FDFBDD347A485D8C7 /* PBXContainerItemProxy */;
+		};
+		0687201684A51170B895AA70 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78002D776589F2F866B12261 /* Infra */;
+			targetProxy = AF24F2A45A4B35BF875314AC /* PBXContainerItemProxy */;
 		};
 		07DE31725665C2A1EFD8B516 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -678,6 +724,11 @@
 			isa = PBXTargetDependency;
 			target = AFED9A1257E5EAD542B63179 /* AppLayer */;
 			targetProxy = 4383D98E6A546B0D80A603DF /* PBXContainerItemProxy */;
+		};
+		FEDD084711C3775ADA0DBB30 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 15A11D6F4C26ABF2FC22ABEB /* Domain */;
+			targetProxy = 6AE404785D0E3412C6AFEA6F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

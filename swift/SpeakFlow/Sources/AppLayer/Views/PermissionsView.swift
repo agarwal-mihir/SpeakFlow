@@ -7,6 +7,28 @@ struct PermissionsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
+                if runtime.requiresPermissionOnboarding {
+                    HStack(spacing: 12) {
+                        Image(systemName: "lock.shield.fill")
+                            .font(.title2)
+                            .foregroundStyle(.orange)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Permission Setup Required")
+                                .font(.headline)
+                            Text("Grant all permissions below to enable dictation, global hotkeys, and paste insertion.")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .padding(16)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .fill(.orange.opacity(0.1))
+                            .stroke(.orange.opacity(0.3), lineWidth: 1)
+                    )
+                }
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Permissions")
                         .font(.largeTitle.bold())

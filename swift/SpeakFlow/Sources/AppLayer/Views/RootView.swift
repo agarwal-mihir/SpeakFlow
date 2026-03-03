@@ -38,18 +38,12 @@ public struct RootView: View {
     }
 
     public var body: some View {
-        ZStack {
-            NavigationSplitView {
-                sidebar
-            } detail: {
-                mainContent
-            }
-            .frame(minWidth: 980, minHeight: 640)
-
-            if runtime.requiresPermissionOnboarding {
-                onboardingOverlay
-            }
+        NavigationSplitView {
+            sidebar
+        } detail: {
+            mainContent
         }
+        .frame(minWidth: 980, minHeight: 640)
         .onAppear {
             refreshSettingsDraft()
             if runtime.requiresPermissionOnboarding {
@@ -122,44 +116,6 @@ public struct RootView: View {
             )
         case .permissions:
             PermissionsView(runtime: runtime)
-        }
-    }
-
-    private var onboardingOverlay: some View {
-        ZStack {
-            Color.black.opacity(0.3)
-                .ignoresSafeArea()
-
-            VStack(alignment: .leading, spacing: 16) {
-                Label("Permission Setup Required", systemImage: "lock.shield")
-                    .font(.title2.bold())
-
-                Text("Grant all permissions to enable dictation, global hotkeys, and paste insertion.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-
-                PermissionsSummaryGrid(runtime: runtime)
-
-                HStack {
-                    Button("Open Permissions Page") { selectedTab = .permissions }
-                        .buttonStyle(.glass)
-
-                    Button("Re-check") { runtime.refreshPermissions() }
-                        .buttonStyle(.glassProminent)
-
-                    Spacer()
-
-                    Label(
-                        runtime.permissionState.allGranted ? "Ready" : "Blocked until all permissions are granted",
-                        systemImage: runtime.permissionState.allGranted ? "checkmark.seal.fill" : "exclamationmark.triangle.fill"
-                    )
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(runtime.permissionState.allGranted ? .green : .orange)
-                }
-            }
-            .padding(24)
-            .frame(width: 640)
-            .glassEffect(.regular, in: .rect(cornerRadius: 20))
         }
     }
 
