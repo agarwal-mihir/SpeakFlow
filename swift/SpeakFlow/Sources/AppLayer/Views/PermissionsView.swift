@@ -15,7 +15,7 @@ struct PermissionsView: View {
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Permission Setup Required")
                                 .font(.headline)
-                            Text("Grant all permissions below to enable dictation, global hotkeys, and paste insertion.")
+                            Text("Grant Microphone and Input Monitoring to enable dictation. Accessibility enables auto-paste.")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
@@ -32,7 +32,7 @@ struct PermissionsView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Permissions")
                         .font(.largeTitle.bold())
-                    Text("Grant all permissions for reliable dictation and insertion.")
+                    Text("Microphone and Input Monitoring are required. Accessibility is optional for automatic paste.")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -58,14 +58,6 @@ struct PermissionsView: View {
                     granted: runtime.permissionState.inputMonitoring,
                     action: { runtime.requestPermission(.inputMonitoring) }
                 )
-                PermissionCard(
-                    title: "Automation",
-                    subtitle: "System Settings → Privacy & Security → Automation",
-                    icon: "gearshape.2.fill",
-                    granted: runtime.permissionState.automation,
-                    action: { runtime.requestPermission(.automation) }
-                )
-
                 HStack {
                     Button("Re-check") { runtime.refreshPermissions() }
                         .buttonStyle(.borderedProminent)
@@ -80,8 +72,8 @@ struct PermissionsView: View {
     private var statusLabel: some View {
         Label(
             runtime.permissionState.allGranted
-                ? "All permissions granted"
-                : "Missing required permissions",
+                ? "Auto-paste ready"
+                : runtime.permissionState.dictationReady ? "Dictation ready, auto-paste optional" : "Missing required permissions",
             systemImage: runtime.permissionState.allGranted
                 ? "checkmark.seal.fill"
                 : "exclamationmark.triangle.fill"
@@ -102,7 +94,7 @@ struct PermissionsSummaryGrid: View {
             }
             GridRow {
                 summaryCell("Input Monitoring", "keyboard", runtime.permissionState.inputMonitoring)
-                summaryCell("Automation", "gearshape.2.fill", runtime.permissionState.automation)
+                summaryCell("Auto-paste", "text.cursor", runtime.permissionState.accessibility)
             }
         }
     }

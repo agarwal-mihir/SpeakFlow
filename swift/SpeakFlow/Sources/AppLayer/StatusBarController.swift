@@ -27,7 +27,7 @@ final class StatusBarController {
         menu.addItem(status)
 
         let perms = NSMenuItem(
-            title: (runtime?.permissionState.allGranted ?? false) ? "Permissions: Ready" : "Permissions: Missing",
+            title: (runtime?.permissionState.dictationReady ?? false) ? "Permissions: Ready" : "Permissions: Missing",
             action: nil,
             keyEquivalent: ""
         )

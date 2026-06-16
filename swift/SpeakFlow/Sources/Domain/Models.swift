@@ -48,22 +48,23 @@ public struct PermissionState: Equatable, Sendable {
     public var microphone: Bool
     public var accessibility: Bool
     public var inputMonitoring: Bool
-    public var automation: Bool
+
+    public var dictationReady: Bool {
+        microphone && inputMonitoring
+    }
 
     public var allGranted: Bool {
-        microphone && accessibility && inputMonitoring && automation
+        microphone && accessibility && inputMonitoring
     }
 
     public init(
         microphone: Bool = false,
         accessibility: Bool = false,
-        inputMonitoring: Bool = false,
-        automation: Bool = false
+        inputMonitoring: Bool = false
     ) {
         self.microphone = microphone
         self.accessibility = accessibility
         self.inputMonitoring = inputMonitoring
-        self.automation = automation
     }
 }
 

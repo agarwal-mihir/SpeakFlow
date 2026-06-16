@@ -89,7 +89,7 @@ public final class TextInsertionService: TextInsertionServiceProtocol, @unchecke
 
     private func pasteWithRetry(targetPID: Int32?) -> Bool {
         for attempt in 0...pasteRetry {
-            if pasteWithSystemEvents(targetPID: targetPID) || pasteWithQuartz() {
+            if pasteWithQuartz() || pasteWithSystemEventsIfOverridden(targetPID: targetPID) {
                 Thread.sleep(forTimeInterval: 0.06)
                 return true
             }
@@ -100,37 +100,11 @@ public final class TextInsertionService: TextInsertionServiceProtocol, @unchecke
         return false
     }
 
-    private func pasteWithSystemEvents(targetPID: Int32?) -> Bool {
+    private func pasteWithSystemEventsIfOverridden(targetPID: Int32?) -> Bool {
         if let pasteSystemOverride {
             return pasteSystemOverride(targetPID)
         }
-        var script = "tell application \"System Events\" to keystroke \"v\" using command down"
-        if let targetPID {
-            script = """
-            tell application "System Events"
-              try
-                set targetProc to first process whose unix id is \(targetPID)
-                if frontmost of targetProc then
-                  tell targetProc to keystroke "v" using command down
-                else
-                  keystroke "v" using command down
-                end if
-              on error
-                keystroke "v" using command down
-              end try
-            end tell
-            """
-        }
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/osascript")
-        process.arguments = ["-e", script]
-        do {
-            try process.run()
-            process.waitUntilExit()
-            return process.terminationStatus == 0
-        } catch {
-            return false
-        }
+        return false
     }
 
     private func pasteWithQuartz() -> Bool {
@@ -156,16 +130,4 @@ public final class TextInsertionService: TextInsertionServiceProtocol, @unchecke
         return true
     }
 
-    public func preflightAutomationPermission() -> Bool {
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/osascript")
-        process.arguments = ["-e", "tell application \"System Events\" to get name of first process"]
-        do {
-            try process.run()
-            process.waitUntilExit()
-            return process.terminationStatus == 0
-        } catch {
-            return false
-        }
-    }
 }

@@ -82,10 +82,9 @@ open /Users/mihiragarwal/Desktop/SpeakFlow/swift/SpeakFlow/SpeakFlow.xcodeproj
 
 ## Permissions Required
 
-- Microphone
-- Accessibility
-- Input Monitoring
-- Automation (System Events)
+- Microphone: required for recording
+- Input Monitoring: required for the global hold-to-talk hotkey
+- Accessibility: optional, enables automatic paste; without it, dictation stays in the clipboard for manual paste
 
 ## Data Paths
 

@@ -4,7 +4,6 @@ public enum SpeakFlowError: LocalizedError, Equatable {
     case microphonePermissionMissing
     case accessibilityPermissionMissing
     case inputMonitoringPermissionMissing
-    case automationPermissionMissing
     case recordingFailed(String)
     case transcriptionFailed(String)
     case insertionFailed(String)
@@ -20,8 +19,6 @@ public enum SpeakFlowError: LocalizedError, Equatable {
             return "Accessibility permission is required."
         case .inputMonitoringPermissionMissing:
             return "Input Monitoring permission is required."
-        case .automationPermissionMissing:
-            return "Automation permission is required."
         case let .recordingFailed(detail):
             return "Unable to record audio: \(detail)"
         case let .transcriptionFailed(detail):

@@ -4,18 +4,13 @@ import Domain
 import Foundation
 
 public final class PermissionService: PermissionServiceProtocol, @unchecked Sendable {
-    private let inserter: TextInsertionService
-
-    public init(inserter: TextInsertionService) {
-        self.inserter = inserter
-    }
+    public init() {}
 
     public func checkAll() -> PermissionState {
         PermissionState(
             microphone: checkMicrophone(),
             accessibility: checkAccessibility(),
-            inputMonitoring: checkInputMonitoring(),
-            automation: checkAutomation()
+            inputMonitoring: checkInputMonitoring()
         )
     }
 
@@ -47,10 +42,6 @@ public final class PermissionService: PermissionServiceProtocol, @unchecked Send
         return checkInputMonitoring()
     }
 
-    public func requestAutomationPrompt() -> Bool {
-        inserter.preflightAutomationPermission()
-    }
-
     public func openMicrophoneSettings() {
         openPrivacy("Microphone")
     }
@@ -61,10 +52,6 @@ public final class PermissionService: PermissionServiceProtocol, @unchecked Send
 
     public func openInputMonitoringSettings() {
         openPrivacy("ListenEvent")
-    }
-
-    public func openAutomationSettings() {
-        openPrivacy("Automation")
     }
 
     private func checkMicrophone() -> Bool {
@@ -80,10 +67,6 @@ public final class PermissionService: PermissionServiceProtocol, @unchecked Send
             return CGPreflightListenEventAccess()
         }
         return false
-    }
-
-    private func checkAutomation() -> Bool {
-        inserter.preflightAutomationPermission()
     }
 
     private func openPrivacy(_ section: String) {

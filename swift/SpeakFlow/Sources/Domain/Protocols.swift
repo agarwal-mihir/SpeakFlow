@@ -45,7 +45,6 @@ public protocol PermissionServiceProtocol: Sendable {
     func requestMicrophone() async -> Bool
     func requestAccessibilityPrompt() -> Bool
     func requestInputMonitoringPrompt() -> Bool
-    func requestAutomationPrompt() -> Bool
 }
 
 public protocol HotkeyServiceProtocol: Sendable {

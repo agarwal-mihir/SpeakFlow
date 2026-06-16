@@ -55,9 +55,9 @@ struct HomeView: View {
                 )
                 StatusChip(
                     title: "Permissions",
-                    value: runtime.permissionState.allGranted ? "Ready" : "Missing",
-                    icon: runtime.permissionState.allGranted ? "checkmark.shield.fill" : "exclamationmark.shield",
-                    tint: runtime.permissionState.allGranted ? .green : .orange
+                    value: runtime.permissionState.dictationReady ? "Ready" : "Missing",
+                    icon: runtime.permissionState.dictationReady ? "checkmark.shield.fill" : "exclamationmark.shield",
+                    tint: runtime.permissionState.dictationReady ? .green : .orange
                 )
                 StatusChip(
                     title: "History",

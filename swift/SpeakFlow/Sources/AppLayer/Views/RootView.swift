@@ -84,11 +84,11 @@ public struct RootView: View {
             Label(runtime.state.rawValue, systemImage: "waveform")
                 .font(.subheadline.bold())
             Label(
-                runtime.permissionState.allGranted ? "Permissions ready" : "Permissions missing",
-                systemImage: runtime.permissionState.allGranted ? "checkmark.circle.fill" : "exclamationmark.circle.fill"
+                runtime.permissionState.dictationReady ? "Dictation ready" : "Permissions missing",
+                systemImage: runtime.permissionState.dictationReady ? "checkmark.circle.fill" : "exclamationmark.circle.fill"
             )
             .font(.caption.weight(.semibold))
-            .foregroundStyle(runtime.permissionState.allGranted ? .green : .orange)
+            .foregroundStyle(runtime.permissionState.dictationReady ? .green : .orange)
 
             Toggle("Service", isOn: Binding(
                 get: { runtime.serviceEnabled },

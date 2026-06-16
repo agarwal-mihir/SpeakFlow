@@ -55,7 +55,7 @@ public final class AppRuntime: ObservableObject {
         }
         secretStore = KeychainSecretStore()
         inserter = TextInsertionService(pasteRetry: 1)
-        permissionService = PermissionService(inserter: inserter)
+        permissionService = PermissionService()
         hotkeyService = HotkeyService()
         audioService = AudioCaptureService()
         sttService = WhisperKitTranscriptionService()
@@ -107,7 +107,7 @@ public final class AppRuntime: ObservableObject {
     public func refreshPermissions() {
         permissionState = permissionService.checkAll()
         refreshRuntimeUIState()
-        AppLogger.info("Permissions refreshed: mic=\(permissionState.microphone) ax=\(permissionState.accessibility) im=\(permissionState.inputMonitoring) auto=\(permissionState.automation)")
+        AppLogger.info("Permissions refreshed: mic=\(permissionState.microphone) ax=\(permissionState.accessibility) im=\(permissionState.inputMonitoring)")
     }
 
     public func requestPermission(_ kind: PermissionKind) {
@@ -128,10 +128,6 @@ public final class AppRuntime: ObservableObject {
         case .inputMonitoring:
             if !permissionService.requestInputMonitoringPrompt() {
                 permissionService.openInputMonitoringSettings()
-            }
-        case .automation:
-            if !permissionService.requestAutomationPrompt() {
-                permissionService.openAutomationSettings()
             }
         }
         refreshPermissions()
@@ -331,7 +327,7 @@ public final class AppRuntime: ObservableObject {
         Task { @MainActor [weak self] in
             defer { semaphore.signal() }
             guard let self else { return }
-            guard self.serviceEnabled, self.permissionState.allGranted, self.config.pasteLastShortcutEnabled else {
+            guard self.serviceEnabled, self.permissionState.dictationReady, self.config.pasteLastShortcutEnabled else {
                 return
             }
             flag.value = true
@@ -348,12 +344,12 @@ public final class AppRuntime: ObservableObject {
     }
 
     private func refreshRuntimeUIState() {
-        requiresPermissionOnboarding = !permissionState.allGranted
+        requiresPermissionOnboarding = !permissionState.dictationReady
         statusBarController?.rebuildMenu()
     }
 
     private func runLaunchPermissionPromptIfNeeded() {
-        guard !permissionState.allGranted else { return }
+        guard !permissionState.dictationReady else { return }
         guard !didRunLaunchPermissionPrompt else { return }
         didRunLaunchPermissionPrompt = true
 
@@ -363,14 +359,8 @@ public final class AppRuntime: ObservableObject {
                 if !self.permissionState.microphone {
                     _ = await self.permissionService.requestMicrophone()
                 }
-                if !self.permissionState.accessibility {
-                    _ = self.permissionService.requestAccessibilityPrompt()
-                }
                 if !self.permissionState.inputMonitoring {
                     _ = self.permissionService.requestInputMonitoringPrompt()
-                }
-                if !self.permissionState.automation {
-                    _ = self.permissionService.requestAutomationPrompt()
                 }
                 self.refreshPermissions()
             }
@@ -406,8 +396,8 @@ public final class AppRuntime: ObservableObject {
 
     private func onHotkeyPress() {
         guard serviceEnabled else { return }
-        guard permissionState.allGranted else {
-            lastError = "Permissions required before dictation"
+        guard permissionState.dictationReady else {
+            lastError = "Microphone and Input Monitoring permissions are required before dictation"
             refreshRuntimeUIState()
             AppLogger.error("Dictation start blocked due to missing permissions.")
             return
@@ -507,7 +497,6 @@ public enum PermissionKind: String, CaseIterable, Identifiable {
     case microphone
     case accessibility
     case inputMonitoring
-    case automation
 
     public var id: String { rawValue }
 
@@ -516,7 +505,6 @@ public enum PermissionKind: String, CaseIterable, Identifiable {
         case .microphone: return "Microphone"
         case .accessibility: return "Accessibility"
         case .inputMonitoring: return "Input Monitoring"
-        case .automation: return "Automation"
         }
     }
 }
