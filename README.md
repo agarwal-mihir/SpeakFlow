@@ -24,14 +24,14 @@ SpeakFlow is a local-first macOS dictation app built in Swift (SwiftUI + AppKit 
 
 ## Project Layout
 
-- Swift package: `/Users/mihiragarwal/Desktop/Whisper/swift/SpeakFlow`
-- App source: `/Users/mihiragarwal/Desktop/Whisper/swift/SpeakFlow/Sources`
-- Tests: `/Users/mihiragarwal/Desktop/Whisper/swift/SpeakFlow/Tests`
+- Swift package: `/Users/mihiragarwal/Desktop/SpeakFlow/swift/SpeakFlow`
+- App source: `/Users/mihiragarwal/Desktop/SpeakFlow/swift/SpeakFlow/Sources`
+- Tests: `/Users/mihiragarwal/Desktop/SpeakFlow/swift/SpeakFlow/Tests`
 
 ## Build App
 
 ```bash
-cd /Users/mihiragarwal/Desktop/Whisper
+cd /Users/mihiragarwal/Desktop/SpeakFlow
 bash scripts/build_swift_app.sh
 ```
 
@@ -41,7 +41,7 @@ Installs to:
 ## Build DMG
 
 ```bash
-cd /Users/mihiragarwal/Desktop/Whisper
+cd /Users/mihiragarwal/Desktop/SpeakFlow
 bash scripts/build_swift_dmg.sh
 ```
 
@@ -51,7 +51,7 @@ Output:
 ## Notarize DMG
 
 ```bash
-cd /Users/mihiragarwal/Desktop/Whisper
+cd /Users/mihiragarwal/Desktop/SpeakFlow
 APPLE_ID=... APPLE_TEAM_ID=... APPLE_APP_PASSWORD=... \
   bash scripts/notarize_swift_dmg.sh /absolute/path/to/SpeakFlow-1.0.0.dmg
 ```
@@ -61,16 +61,16 @@ APPLE_ID=... APPLE_TEAM_ID=... APPLE_APP_PASSWORD=... \
 Run tests:
 
 ```bash
-cd /Users/mihiragarwal/Desktop/Whisper/swift/SpeakFlow
+cd /Users/mihiragarwal/Desktop/SpeakFlow/swift/SpeakFlow
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --disable-sandbox -c debug
 ```
 
 Open in Xcode:
 
 ```bash
-cd /Users/mihiragarwal/Desktop/Whisper/swift/SpeakFlow
+cd /Users/mihiragarwal/Desktop/SpeakFlow/swift/SpeakFlow
 xcodegen generate
-open /Users/mihiragarwal/Desktop/Whisper/swift/SpeakFlow/SpeakFlow.xcodeproj
+open /Users/mihiragarwal/Desktop/SpeakFlow/swift/SpeakFlow/SpeakFlow.xcodeproj
 ```
 
 ## Runtime Behavior
@@ -103,11 +103,11 @@ open /Users/mihiragarwal/Desktop/Whisper/swift/SpeakFlow/SpeakFlow.xcodeproj
 Install launch agent:
 
 ```bash
-bash /Users/mihiragarwal/Desktop/Whisper/scripts/install_launch_agent.sh
+bash /Users/mihiragarwal/Desktop/SpeakFlow/scripts/install_launch_agent.sh
 ```
 
 Uninstall launch agent:
 
 ```bash
-bash /Users/mihiragarwal/Desktop/Whisper/scripts/uninstall_launch_agent.sh
+bash /Users/mihiragarwal/Desktop/SpeakFlow/scripts/uninstall_launch_agent.sh
 ```

@@ -8,7 +8,7 @@ let package = Package(
         .executable(name: "SpeakFlowApp", targets: ["SpeakFlowApp"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/argmaxinc/WhisperKit.git", from: "0.9.0"),
+        .package(url: "https://github.com/argmaxinc/WhisperKit.git", from: "0.15.0"),
     ],
     targets: [
         .target(

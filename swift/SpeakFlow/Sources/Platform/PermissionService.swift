@@ -19,13 +19,20 @@ public final class PermissionService: PermissionServiceProtocol, @unchecked Send
         )
     }
 
-    public func requestMicrophone() -> Bool {
+    public func requestMicrophone() async -> Bool {
         let status = AVCaptureDevice.authorizationStatus(for: .audio)
-        if status == .authorized { return true }
-        if status == .notDetermined {
-            AVCaptureDevice.requestAccess(for: .audio) { _ in }
+        switch status {
+        case .authorized:
+            return true
+        case .notDetermined:
+            return await withCheckedContinuation { continuation in
+                AVCaptureDevice.requestAccess(for: .audio) { granted in
+                    continuation.resume(returning: granted)
+                }
+            }
+        default:
+            return false
         }
-        return AVCaptureDevice.authorizationStatus(for: .audio) == .authorized
     }
 
     public func requestAccessibilityPrompt() -> Bool {

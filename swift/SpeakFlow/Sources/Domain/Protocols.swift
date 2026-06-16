@@ -42,7 +42,7 @@ public protocol TextInsertionServiceProtocol: Sendable {
 
 public protocol PermissionServiceProtocol: Sendable {
     func checkAll() -> PermissionState
-    func requestMicrophone() -> Bool
+    func requestMicrophone() async -> Bool
     func requestAccessibilityPrompt() -> Bool
     func requestInputMonitoringPrompt() -> Bool
     func requestAutomationPrompt() -> Bool

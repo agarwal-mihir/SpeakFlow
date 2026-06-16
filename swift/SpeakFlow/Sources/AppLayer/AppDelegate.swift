@@ -27,8 +27,18 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
     }
 
     public func openMainWindow() {
+        prepareWindow()
         window?.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
+    }
+
+    public func prepareWindow() {
+        guard let window else { return }
+        window.title = "SpeakFlow"
+        window.titleVisibility = .hidden
+        window.toolbarStyle = .unified
+        window.setFrameAutosaveName("SpeakFlow.MainWindow")
+        window.isReleasedWhenClosed = false
     }
 }
 

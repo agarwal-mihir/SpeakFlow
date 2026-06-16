@@ -163,13 +163,14 @@ struct SettingsView: View {
                         groqKey = ""
                         onRefreshDraft()
                     }
-                    .buttonStyle(.glassProminent)
+                    .buttonStyle(.borderedProminent)
+                    .disabled(groqKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 
                     Button("Clear key") {
                         runtime.clearGroqKey()
                         onRefreshDraft()
                     }
-                    .buttonStyle(.glass)
+                    .buttonStyle(.bordered)
                 }
             }
         }
@@ -216,9 +217,9 @@ struct SettingsView: View {
 
             HStack(spacing: 10) {
                 Button("Install auto-start") { runtime.installAutostart() }
-                    .buttonStyle(.glass)
+                    .buttonStyle(.bordered)
                 Button("Uninstall auto-start") { runtime.uninstallAutostart() }
-                    .buttonStyle(.glass)
+                    .buttonStyle(.bordered)
             }
         }
         .glassCard()
@@ -237,7 +238,7 @@ struct SettingsView: View {
             TextField(placeholder, text: text)
                 .textFieldStyle(.roundedBorder)
             Button("Apply", action: onApply)
-                .buttonStyle(.glass)
+                .buttonStyle(.bordered)
         }
     }
 }

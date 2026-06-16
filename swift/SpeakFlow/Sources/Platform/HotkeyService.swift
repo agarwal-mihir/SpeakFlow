@@ -111,7 +111,9 @@ public final class HotkeyService: HotkeyServiceProtocol, @unchecked Sendable {
         case .fnHold:
             handleFnHold(fnPressed)
         case .fnSpaceHold:
-            handleFnSpace(type: type, fnPressed: fnPressed, keycode: keycode)
+            if handleFnSpace(type: type, fnPressed: fnPressed, keycode: keycode) {
+                return nil
+            }
         }
 
         return Unmanaged.passRetained(event)
@@ -127,17 +129,19 @@ public final class HotkeyService: HotkeyServiceProtocol, @unchecked Sendable {
         }
     }
 
-    private func handleFnSpace(type: CGEventType, fnPressed: Bool, keycode: Int) {
+    private func handleFnSpace(type: CGEventType, fnPressed: Bool, keycode: Int) -> Bool {
         if type == .keyDown && keycode == 49 && fnPressed {
             if !comboDown {
                 comboDown = true
                 onPress?()
             }
-            return
+            return true
         }
         if type == .keyUp && keycode == 49 && comboDown {
             comboDown = false
             onRelease?()
+            return true
         }
+        return false
     }
 }

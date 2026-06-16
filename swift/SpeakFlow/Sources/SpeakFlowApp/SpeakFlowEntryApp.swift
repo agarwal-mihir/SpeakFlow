@@ -14,6 +14,7 @@ struct SpeakFlowEntryApp: App {
                         appDelegate.runtime = runtime
                         appDelegate.window = window
                         window.delegate = appDelegate
+                        appDelegate.prepareWindow()
                         runtime.configureStatusBar {
                             appDelegate.openMainWindow()
                         }

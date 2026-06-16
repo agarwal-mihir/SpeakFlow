@@ -8,7 +8,10 @@ public final class SQLiteHistoryStore: HistoryStoreProtocol {
 
     public init(dbURL: URL = SpeakFlowPaths.historySQLite) throws {
         self.dbURL = dbURL
-        try ensureAppSupportDirectories()
+        try FileManager.default.createDirectory(
+            at: dbURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
         try initializeSchema()
     }
 

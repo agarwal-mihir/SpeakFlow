@@ -68,7 +68,7 @@ struct PermissionsView: View {
 
                 HStack {
                     Button("Re-check") { runtime.refreshPermissions() }
-                        .buttonStyle(.glassProminent)
+                        .buttonStyle(.borderedProminent)
                     Spacer()
                     statusLabel
                 }
@@ -119,7 +119,7 @@ struct PermissionsSummaryGrid: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(10)
-        .glassEffect(.regular, in: .rect(cornerRadius: 10))
+        .macPanel(cornerRadius: 10)
     }
 }
 
@@ -163,6 +163,6 @@ private struct PermissionCard: View {
                 .buttonStyle(.borderedProminent)
         }
         .padding(16)
-        .glassEffect(.regular, in: .rect(cornerRadius: 14))
+        .macPanel(cornerRadius: 12)
     }
 }

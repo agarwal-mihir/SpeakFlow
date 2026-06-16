@@ -30,7 +30,7 @@ struct HistoryView: View {
                 .foregroundStyle(.secondary)
                 .padding(.vertical, 6)
                 .padding(.horizontal, 12)
-                .glassEffect(.regular, in: .capsule)
+                .background(.regularMaterial, in: Capsule())
         }
     }
 
@@ -46,12 +46,12 @@ struct HistoryView: View {
                 .textFieldStyle(.plain)
             }
             .padding(10)
-            .glassEffect(.regular, in: .rect(cornerRadius: 10))
+            .macPanel(cornerRadius: 10)
 
             Button { runtime.reloadHistory() } label: {
                 Image(systemName: "arrow.clockwise")
             }
-            .buttonStyle(.glass)
+            .buttonStyle(.bordered)
 
             Button {
                 guard let selected = selectedRecord else { return }
@@ -59,7 +59,7 @@ struct HistoryView: View {
             } label: {
                 Image(systemName: "doc.on.doc")
             }
-            .buttonStyle(.glass)
+            .buttonStyle(.bordered)
             .disabled(selectedRecord == nil)
 
             Button(role: .destructive) {
@@ -69,7 +69,7 @@ struct HistoryView: View {
             } label: {
                 Image(systemName: "trash")
             }
-            .buttonStyle(.glass)
+            .buttonStyle(.bordered)
             .disabled(selectedRecord == nil)
         }
     }
@@ -121,7 +121,7 @@ struct HistoryView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(40)
-        .glassEffect(.regular, in: .rect(cornerRadius: 16))
+        .macPanel(cornerRadius: 12)
     }
 
     private var selectedRecord: HistoryRecord? {
@@ -155,10 +155,11 @@ private struct HistoryRow: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .padding(14)
-            .glassEffect(
-                selected ? .regular.tint(.accentColor.opacity(0.3)) : .regular,
-                in: .rect(cornerRadius: 12)
+            .background(
+                selected ? Color.accentColor.opacity(0.16) : Color.clear,
+                in: RoundedRectangle(cornerRadius: 10, style: .continuous)
             )
+            .macPanel(cornerRadius: 10)
         }
         .buttonStyle(.plain)
         .contextMenu {

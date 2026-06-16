@@ -98,7 +98,7 @@ public struct RootView: View {
             .controlSize(.small)
         }
         .padding(12)
-        .glassEffect(.regular, in: .rect(cornerRadius: 14))
+        .macPanel(cornerRadius: 12)
     }
 
     @ViewBuilder

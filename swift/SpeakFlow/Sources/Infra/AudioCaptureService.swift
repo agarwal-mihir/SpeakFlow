@@ -12,6 +12,7 @@ public final class AudioCaptureService: AudioCaptureServiceProtocol, @unchecked 
     private let targetSampleRate: Double = 16_000
     private let silenceThreshold: Float = 0.0137 // ~450/32768
     private let silencePaddingSeconds: Double = 0.12
+    private let maxRecordingSeconds: Double = 120
 
     public init() {}
 
@@ -22,6 +23,7 @@ public final class AudioCaptureService: AudioCaptureServiceProtocol, @unchecked 
             return
         }
         bufferedSamples.removeAll(keepingCapacity: true)
+        bufferedSamples.reserveCapacity(Int(targetSampleRate * 12))
         liveLevel = 0
         recording = true
         lock.unlock()
@@ -98,7 +100,11 @@ public final class AudioCaptureService: AudioCaptureServiceProtocol, @unchecked 
         let rms = sqrt(chunk.reduce(0) { $0 + ($1 * $1) } / Float(max(chunk.count, 1)))
 
         lock.lock()
-        bufferedSamples.append(contentsOf: chunk)
+        let maxSamples = Int(targetSampleRate * maxRecordingSeconds)
+        let remaining = max(0, maxSamples - bufferedSamples.count)
+        if remaining > 0 {
+            bufferedSamples.append(contentsOf: chunk.prefix(remaining))
+        }
         liveLevel = min(1.0, max(0.0, (liveLevel * 0.6) + (rms * 6.0 * 0.4)))
         lock.unlock()
     }

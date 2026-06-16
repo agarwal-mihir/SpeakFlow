@@ -555,9 +555,10 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
 			};
 			buildConfigurationList = 394B37E367AD480772EF1C0A /* Build configuration list for PBXProject "SpeakFlow" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -570,6 +571,7 @@
 				D574679B1FC07C2BD751FB03 /* XCRemoteSwiftPackageReference "WhisperKit" */,
 			);
 			preferredProjectObjectVersion = 77;
+			productRefGroup = AEA00197CDC0F8A2CA56CD4B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (

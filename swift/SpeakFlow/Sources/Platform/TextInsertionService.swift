@@ -137,16 +137,22 @@ public final class TextInsertionService: TextInsertionServiceProtocol, @unchecke
         if let pasteQuartzOverride {
             return pasteQuartzOverride()
         }
+        guard AXIsProcessTrusted() else {
+            return false
+        }
+        let source = CGEventSource(stateID: .hidSystemState)
         guard
-            let down = CGEvent(keyboardEventSource: nil, virtualKey: 9, keyDown: true),
-            let up = CGEvent(keyboardEventSource: nil, virtualKey: 9, keyDown: false)
+            let down = CGEvent(keyboardEventSource: source, virtualKey: 0x09, keyDown: true),
+            let up = CGEvent(keyboardEventSource: source, virtualKey: 0x09, keyDown: false)
         else {
             return false
         }
         down.flags = .maskCommand
         up.flags = .maskCommand
-        down.post(tap: .cghidEventTap)
-        up.post(tap: .cghidEventTap)
+        down.post(tap: .cgSessionEventTap)
+        Thread.sleep(forTimeInterval: 0.008)
+        up.post(tap: .cgSessionEventTap)
+        Thread.sleep(forTimeInterval: 0.020)
         return true
     }
 

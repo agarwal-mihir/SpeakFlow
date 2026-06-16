@@ -31,7 +31,7 @@ struct HomeView: View {
                 .font(.subheadline.weight(.semibold))
                 .padding(.vertical, 8)
                 .padding(.horizontal, 14)
-                .glassEffect(.regular, in: .capsule)
+                .background(.regularMaterial, in: Capsule())
         }
     }
 
@@ -123,7 +123,7 @@ struct HomeView: View {
             .pickerStyle(.segmented)
 
             Button("Open full settings", action: onOpenSettings)
-                .buttonStyle(.glass)
+                .buttonStyle(.bordered)
         }
         .glassCard()
     }
@@ -178,6 +178,6 @@ private struct StatusChip: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
-        .glassEffect(.regular, in: .rect(cornerRadius: 14))
+        .macPanel(cornerRadius: 12)
     }
 }

@@ -40,7 +40,19 @@ public final class AppRuntime: ObservableObject {
         configStore = JSONConfigStore()
         let loadedConfig = (try? configStore.load()) ?? AppConfig()
         config = loadedConfig
-        historyStore = (try? SQLiteHistoryStore()) ?? (try! SQLiteHistoryStore())
+        do {
+            historyStore = try SQLiteHistoryStore()
+        } catch {
+            AppLogger.error("Failed to initialize default history store, using temporary store: \(error.localizedDescription)")
+            let fallbackURL = FileManager.default.temporaryDirectory
+                .appendingPathComponent("SpeakFlow-\(UUID().uuidString)")
+                .appendingPathComponent("history.sqlite3")
+            do {
+                historyStore = try SQLiteHistoryStore(dbURL: fallbackURL)
+            } catch {
+                fatalError("Failed to initialize fallback history store: \(error.localizedDescription)")
+            }
+        }
         secretStore = KeychainSecretStore()
         inserter = TextInsertionService(pasteRetry: 1)
         permissionService = PermissionService(inserter: inserter)
@@ -101,9 +113,14 @@ public final class AppRuntime: ObservableObject {
     public func requestPermission(_ kind: PermissionKind) {
         switch kind {
         case .microphone:
-            if !permissionService.requestMicrophone() {
-                permissionService.openMicrophoneSettings()
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                if !(await self.permissionService.requestMicrophone()) {
+                    self.permissionService.openMicrophoneSettings()
+                }
+                self.refreshPermissions()
             }
+            return
         case .accessibility:
             if !permissionService.requestAccessibilityPrompt() {
                 permissionService.openAccessibilitySettings()
@@ -125,6 +142,7 @@ public final class AppRuntime: ObservableObject {
         if !enabled {
             hotkeyService.stop()
             stopMeterUpdates()
+            stopRecordingIfNeeded(discardAudio: true)
             state = .idle
             updateIndicator(.hidden)
         } else {
@@ -278,6 +296,16 @@ public final class AppRuntime: ObservableObject {
         refreshRuntimeUIState()
     }
 
+    private func stopRecordingIfNeeded(discardAudio: Bool) {
+        guard audioService.isRecording() else { return }
+        do {
+            let samples = try audioService.stopRecording()
+            AppLogger.info("Recording stopped after service disable. discarded_samples=\(discardAudio ? samples.count : 0)")
+        } catch {
+            AppLogger.error("Failed to stop recording while disabling service: \(error.localizedDescription)")
+        }
+    }
+
     private func setupHotkeys() {
         hotkeyService.stop()
         hotkeyService.setHandlers(
@@ -330,20 +358,22 @@ public final class AppRuntime: ObservableObject {
         didRunLaunchPermissionPrompt = true
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
-            guard let self else { return }
-            if !self.permissionState.microphone {
-                _ = self.permissionService.requestMicrophone()
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                if !self.permissionState.microphone {
+                    _ = await self.permissionService.requestMicrophone()
+                }
+                if !self.permissionState.accessibility {
+                    _ = self.permissionService.requestAccessibilityPrompt()
+                }
+                if !self.permissionState.inputMonitoring {
+                    _ = self.permissionService.requestInputMonitoringPrompt()
+                }
+                if !self.permissionState.automation {
+                    _ = self.permissionService.requestAutomationPrompt()
+                }
+                self.refreshPermissions()
             }
-            if !self.permissionState.accessibility {
-                _ = self.permissionService.requestAccessibilityPrompt()
-            }
-            if !self.permissionState.inputMonitoring {
-                _ = self.permissionService.requestInputMonitoringPrompt()
-            }
-            if !self.permissionState.automation {
-                _ = self.permissionService.requestAutomationPrompt()
-            }
-            self.refreshPermissions()
         }
     }
 
