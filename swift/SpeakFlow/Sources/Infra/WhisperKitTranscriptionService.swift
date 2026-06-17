@@ -105,10 +105,12 @@ public final class WhisperKitTranscriptionService: SpeechTranscriptionServicePro
 public final class ParakeetMLXTranscriptionService: SpeechTranscriptionServiceProtocol, @unchecked Sendable {
     private let model: ParakeetModel
     private let computeBackend: ComputeBackend
+    private let runner: ParakeetMLXRunner
 
-    public init(model: ParakeetModel, computeBackend: ComputeBackend) {
+    public init(model: ParakeetModel, computeBackend: ComputeBackend, runner: ParakeetMLXRunner = .live) {
         self.model = model
         self.computeBackend = computeBackend
+        self.runner = runner
     }
 
     public func transcribe(_ audio: [Float]) async throws -> TranscriptResult {
@@ -116,8 +118,6 @@ public final class ParakeetMLXTranscriptionService: SpeechTranscriptionServicePr
             return TranscriptResult(rawText: "", detectedLanguage: nil, confidence: nil, isMixedScript: false)
         }
 
-        throw SpeakFlowError.transcriptionFailed(
-            "\(model.title) via MLX is selected with \(computeBackend.title), but the MLX Parakeet backend is not linked in this build yet."
-        )
+        return try await runner.transcribe(audio: audio, model: model, computeBackend: computeBackend)
     }
 }

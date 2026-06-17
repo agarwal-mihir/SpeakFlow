@@ -24,10 +24,12 @@
 		2C772F8F4DAFD9A9F7128495 /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADBB317440097C7F220A672 /* AppLogger.swift */; };
 		34BF8DEEF9E97616DB924705 /* SpeakFlowEntryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C989DA210ED6660187ACCB89 /* SpeakFlowEntryApp.swift */; };
 		37439F1C517976423A6AE551 /* PermissionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0DF5DA588EEB7B401B015C8 /* PermissionService.swift */; };
+		37BBC2DE0AB07A868C9133E2 /* ParakeetMLXRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27BE3C451E76DD307A75B09 /* ParakeetMLXRunner.swift */; };
 		3CB18A7C8E4C0447503373C1 /* AppLayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF72CD8977998C1C14229911 /* AppLayer.framework */; };
 		3E760915FE697FD38D56DFFC /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = 662E89695B025AE67CC019A3 /* WhisperKit */; };
 		4150DAA63AA96EC69BADC898 /* LanguageNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D0573176C76DDCB8198852 /* LanguageNormalizer.swift */; };
 		4C07519C87EF7CD810E613AD /* CleanupServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A65540AB7BE6B1AB5E9446C /* CleanupServiceTests.swift */; };
+		50D4F8C57585C531053F168E /* ParakeetMLXRunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF224FAF57197B532D1D98AD /* ParakeetMLXRunnerTests.swift */; };
 		536576148EE9E4C5CC88377B /* AppRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C8F4925635C734E7E358B1 /* AppRuntime.swift */; };
 		54DD4DEB5C9FF0523D825325 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 838671D00D6D40B1933D2AEE /* Domain.framework */; };
 		594C7A01BB638A1B57C6AA59 /* ViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501E0673F9483352E36BAD16 /* ViewModifiers.swift */; };
@@ -229,6 +231,8 @@
 		B2C303D39320E0C500026C9C /* FloatingIndicatorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingIndicatorController.swift; sourceTree = "<group>"; };
 		B58D791052FB9ABD1B7149A7 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		B97A0CB8A64CCB85E0BFCFFE /* SingleInstanceLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleInstanceLock.swift; sourceTree = "<group>"; };
+		BF224FAF57197B532D1D98AD /* ParakeetMLXRunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParakeetMLXRunnerTests.swift; sourceTree = "<group>"; };
+		C27BE3C451E76DD307A75B09 /* ParakeetMLXRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParakeetMLXRunner.swift; sourceTree = "<group>"; };
 		C538FBC4D09EC262643A6788 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		C69111BDBDC7CAC5FD9074BB /* SecretStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretStore.swift; sourceTree = "<group>"; };
 		C7C15AE916AED903FFA6896F /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -327,6 +331,7 @@
 				73989DC8C8E04F3C2CDD3840 /* ConfigStore.swift */,
 				0AC33494F2F6FA7B96CFE1C0 /* HistoryStore.swift */,
 				81D0573176C76DDCB8198852 /* LanguageNormalizer.swift */,
+				C27BE3C451E76DD307A75B09 /* ParakeetMLXRunner.swift */,
 				A9A4F686FAA2884AB6E08EEA /* Paths.swift */,
 				C69111BDBDC7CAC5FD9074BB /* SecretStore.swift */,
 				D176F436AFDD23EECA3FA8EA /* WhisperKitTranscriptionService.swift */,
@@ -398,6 +403,7 @@
 				3A65540AB7BE6B1AB5E9446C /* CleanupServiceTests.swift */,
 				74190A8885AED845E9435761 /* ConfigStoreTests.swift */,
 				DB37F013F035CC4AA3B9AF85 /* HistoryStoreTests.swift */,
+				BF224FAF57197B532D1D98AD /* ParakeetMLXRunnerTests.swift */,
 				88756923B22716A20265DD7D /* PipelineTests.swift */,
 				A9FEF6FAB0A0021901911EAC /* TextInsertionServiceTests.swift */,
 			);
@@ -632,6 +638,7 @@
 				D7541FDFD26CB78B6BAE9684 /* ConfigStore.swift in Sources */,
 				6074E1FEF25E134AF51D9C29 /* HistoryStore.swift in Sources */,
 				4150DAA63AA96EC69BADC898 /* LanguageNormalizer.swift in Sources */,
+				37BBC2DE0AB07A868C9133E2 /* ParakeetMLXRunner.swift in Sources */,
 				91D7AB73487DF36925E03B53 /* Paths.swift in Sources */,
 				5AACBE6828EBE85E69A1BD70 /* SecretStore.swift in Sources */,
 				8F051B1BAA18DA1C0528C10C /* WhisperKitTranscriptionService.swift in Sources */,
@@ -645,6 +652,7 @@
 				4C07519C87EF7CD810E613AD /* CleanupServiceTests.swift in Sources */,
 				AC942FD7711186A6CF30C897 /* ConfigStoreTests.swift in Sources */,
 				207AC20D6FFF27841AFB5A76 /* HistoryStoreTests.swift in Sources */,
+				50D4F8C57585C531053F168E /* ParakeetMLXRunnerTests.swift in Sources */,
 				FF23EF038CD7960C0CB1FAD9 /* PipelineTests.swift in Sources */,
 				1B90F7AED52115EB42D8C8A6 /* TextInsertionServiceTests.swift in Sources */,
 			);

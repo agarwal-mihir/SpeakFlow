@@ -14,7 +14,7 @@ SpeakFlow is a local-first macOS dictation app built in Swift (SwiftUI + AppKit 
 - Background service on window close, quit on `Cmd+Q`
 - Cleanup chain: `Groq -> LM Studio -> deterministic fallback`
 - Local STT: WhisperKit/Core ML with selectable model and Auto/CPU/GPU compute
-- NVIDIA Parakeet model choices are present in the Models page; the MLX Parakeet backend is not linked yet and reports that clearly if selected
+- NVIDIA Parakeet model choices aligned with OpenWhispr, invoked through a local MLX runner executable when installed
 
 ## Requirements
 
@@ -81,6 +81,29 @@ open /Users/mihiragarwal/Desktop/SpeakFlow/swift/SpeakFlow/SpeakFlow.xcodeproj
 - `Cmd+Q` fully quits.
 - If auto-paste fails and fallback is enabled, last dictation stays in clipboard.
 - The Models page selects the speech engine, model, compute device, and cleanup chain.
+
+## NVIDIA Parakeet MLX Runner
+
+SpeakFlow can use NVIDIA Parakeet through an external local runner named `speakflow-parakeet-mlx`. The app searches these locations:
+
+- `SPEAKFLOW_PARAKEET_MLX_RUNNER`
+- `/opt/homebrew/bin/speakflow-parakeet-mlx`
+- `/usr/local/bin/speakflow-parakeet-mlx`
+- `~/.local/bin/speakflow-parakeet-mlx`
+
+Runner invocation contract:
+
+```bash
+speakflow-parakeet-mlx --audio /path/to/audio.wav --model parakeet-tdt-0.6b-v3 --device auto --format json
+```
+
+The audio file is mono 16 kHz PCM WAV. The runner should print JSON like:
+
+```json
+{"text":"transcribed text","language":"en","confidence":0.91}
+```
+
+Plain stdout text is accepted as a fallback. CPU/GPU selections are passed as `--device cpu|gpu|auto`, and `MLX_DEVICE` is set for explicit CPU/GPU choices.
 
 ## Permissions Required
 

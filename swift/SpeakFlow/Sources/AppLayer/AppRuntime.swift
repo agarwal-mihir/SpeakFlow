@@ -17,6 +17,7 @@ public final class AppRuntime: ObservableObject {
     @Published public var historyStats = HistoryStats(totalCount: 0, latestCreatedAt: "", latestSourceApp: "Unknown", topSourceApp: "Unknown", topSourceAppCount: 0)
     @Published public var config: AppConfig
     @Published public var audioLevel: Float = 0
+    @Published public var parakeetRunnerStatus: ParakeetMLXRunnerStatus = ParakeetMLXRunner.status()
 
     private let configStore: JSONConfigStore
     private let historyStore: SQLiteHistoryStore
@@ -285,6 +286,10 @@ public final class AppRuntime: ObservableObject {
             lastError = error.localizedDescription
             AppLogger.error("Failed to clear Groq key: \(error.localizedDescription)")
         }
+    }
+
+    public func refreshModelStatus() {
+        parakeetRunnerStatus = ParakeetMLXRunner.status()
     }
 
     public func installAutostart() {

@@ -20,6 +20,9 @@ struct ModelsView: View {
             .padding(28)
         }
         .onAppear(perform: refreshDraft)
+        .onAppear {
+            runtime.refreshModelStatus()
+        }
     }
 
     private var header: some View {
@@ -140,7 +143,7 @@ struct ModelsView: View {
             VStack(alignment: .leading, spacing: 12) {
                 modelList(
                     title: "NVIDIA Parakeet models",
-                    subtitle: "Parakeet choices are aligned with OpenWhispr, but the MLX backend still needs to be linked before transcription can run.",
+                    subtitle: "Parakeet choices are aligned with OpenWhispr and run through a local MLX runner executable.",
                     models: ParakeetModel.allCases.map { model in
                         ModelOption(
                             id: model.rawValue,
@@ -154,12 +157,24 @@ struct ModelsView: View {
                     }
                 )
 
-                Label("Parakeet is selectable now; dictation will report that MLX Parakeet is not linked until the backend is implemented.", systemImage: "exclamationmark.triangle.fill")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.orange)
-                    .padding(.horizontal, 2)
+                parakeetRunnerStatus
             }
         }
+    }
+
+    private var parakeetRunnerStatus: some View {
+        HStack(alignment: .top, spacing: 8) {
+            Image(systemName: runtime.parakeetRunnerStatus.isAvailable ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+                .foregroundStyle(runtime.parakeetRunnerStatus.isAvailable ? .green : .orange)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(runtime.parakeetRunnerStatus.isAvailable ? "MLX runner detected" : "MLX runner required")
+                    .font(.caption.weight(.semibold))
+                Text(runtime.parakeetRunnerStatus.message)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(.horizontal, 2)
     }
 
     private func modelList(title: String, subtitle: String, models: [ModelOption]) -> some View {
