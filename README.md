@@ -8,12 +8,13 @@ SpeakFlow is a local-first macOS dictation app built in Swift (SwiftUI + AppKit 
 - Global hold-to-talk: `Fn` or `Fn+Space`
 - Global paste-last fallback: `Option+Cmd+V`
 - Floating recording indicator (recording/transcribing/done/error)
-- Permissions onboarding + re-check
-- Desktop UI pages: Home, History, Settings, Permissions
-- History: search/copy/delete + stats
+- Permissions folded into the dictation page
+- Desktop UI pages: Dictation, Models
+- Recent dictation list with copy action
 - Background service on window close, quit on `Cmd+Q`
 - Cleanup chain: `Groq -> LM Studio -> deterministic fallback`
-- Local STT: WhisperKit/CoreML
+- Local STT: WhisperKit/Core ML with selectable model and Auto/CPU/GPU compute
+- NVIDIA Parakeet model choices are present in the Models page; the MLX Parakeet backend is not linked yet and reports that clearly if selected
 
 ## Requirements
 
@@ -79,6 +80,7 @@ open /Users/mihiragarwal/Desktop/SpeakFlow/swift/SpeakFlow/SpeakFlow.xcodeproj
 - Closing window hides app to background; dictation stays active.
 - `Cmd+Q` fully quits.
 - If auto-paste fails and fallback is enabled, last dictation stays in clipboard.
+- The Models page selects the speech engine, model, compute device, and cleanup chain.
 
 ## Permissions Required
 

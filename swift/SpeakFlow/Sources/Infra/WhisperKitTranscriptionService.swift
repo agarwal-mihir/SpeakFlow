@@ -2,15 +2,18 @@ import Domain
 import Foundation
 
 #if canImport(WhisperKit)
+import CoreML
 @preconcurrency import WhisperKit
 #endif
 
 public final class WhisperKitTranscriptionService: SpeechTranscriptionServiceProtocol, @unchecked Sendable {
     private let modelName: String
+    private let computeBackend: ComputeBackend
     private nonisolated(unsafe) var cachedWhisper: Any?
 
-    public init(modelName: String = "large-v3") {
+    public init(modelName: String = "large-v3", computeBackend: ComputeBackend = .automatic) {
         self.modelName = modelName
+        self.computeBackend = computeBackend
     }
 
     public func transcribe(_ audio: [Float]) async throws -> TranscriptResult {
@@ -25,6 +28,7 @@ public final class WhisperKitTranscriptionService: SpeechTranscriptionServicePro
         } else {
             let whisperConfig = WhisperKitConfig(
                 model: modelName,
+                computeOptions: computeOptions(),
                 verbose: false,
                 logLevel: .error,
                 prewarm: true,
@@ -72,5 +76,48 @@ public final class WhisperKitTranscriptionService: SpeechTranscriptionServicePro
         let total = Double(text.count)
         let devCount = Double(text.unicodeScalars.filter { (0x0900...0x097F).contains(Int($0.value)) }.count)
         return devCount / total
+    }
+
+    #if canImport(WhisperKit)
+    private func computeOptions() -> ModelComputeOptions {
+        switch computeBackend {
+        case .automatic:
+            return ModelComputeOptions()
+        case .cpu:
+            return ModelComputeOptions(
+                melCompute: .cpuOnly,
+                audioEncoderCompute: .cpuOnly,
+                textDecoderCompute: .cpuOnly,
+                prefillCompute: .cpuOnly
+            )
+        case .gpu:
+            return ModelComputeOptions(
+                melCompute: .cpuAndGPU,
+                audioEncoderCompute: .cpuAndGPU,
+                textDecoderCompute: .cpuAndGPU,
+                prefillCompute: .cpuAndGPU
+            )
+        }
+    }
+    #endif
+}
+
+public final class ParakeetMLXTranscriptionService: SpeechTranscriptionServiceProtocol, @unchecked Sendable {
+    private let model: ParakeetModel
+    private let computeBackend: ComputeBackend
+
+    public init(model: ParakeetModel, computeBackend: ComputeBackend) {
+        self.model = model
+        self.computeBackend = computeBackend
+    }
+
+    public func transcribe(_ audio: [Float]) async throws -> TranscriptResult {
+        guard !audio.isEmpty else {
+            return TranscriptResult(rawText: "", detectedLanguage: nil, confidence: nil, isMixedScript: false)
+        }
+
+        throw SpeakFlowError.transcriptionFailed(
+            "\(model.title) via MLX is selected with \(computeBackend.title), but the MLX Parakeet backend is not linked in this build yet."
+        )
     }
 }

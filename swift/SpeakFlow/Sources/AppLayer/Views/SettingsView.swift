@@ -1,107 +1,233 @@
 import Domain
 import SwiftUI
 
-struct SettingsDraft {
-    var lmstudioBaseURL = ""
-    var lmstudioAutoStart = true
-    var lmstudioStartTimeoutMs = "8000"
-    var groqBaseURL = ""
-    var groqModel = ""
-    var floatingIndicatorHideDelayMs = "1000"
-    var groqKeyMaskedState = "Not set"
-
-    init() {}
-
-    init(config: AppConfig, hasGroqKey: Bool) {
-        lmstudioBaseURL = config.lmstudioBaseURL
-        lmstudioAutoStart = config.lmstudioAutoStart
-        lmstudioStartTimeoutMs = "\(config.lmstudioStartTimeoutMs)"
-        groqBaseURL = config.groqBaseURL
-        groqModel = config.groqModel
-        floatingIndicatorHideDelayMs = "\(config.floatingIndicatorHideDelayMs)"
-        groqKeyMaskedState = hasGroqKey ? "Saved in Keychain" : "Not set"
-    }
-}
-
-struct SettingsView: View {
+struct ModelsView: View {
     @ObservedObject var runtime: AppRuntime
-    @Binding var draft: SettingsDraft
+    @State private var lmstudioBaseURL = ""
+    @State private var groqBaseURL = ""
+    @State private var groqModel = ""
     @State private var groqKey = ""
-    var onRefreshDraft: () -> Void
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                Text("Settings")
-                    .font(.largeTitle.bold())
-
-                serviceSection
-                cleanupSection
-                indicatorSection
-                startupSection
+            VStack(alignment: .leading, spacing: 18) {
+                header
+                providerPanel
+                computePanel
+                activeModelPanel
+                cleanupPanel
             }
             .padding(28)
         }
-        .onAppear { onRefreshDraft() }
+        .onAppear(perform: refreshDraft)
     }
 
-    private var serviceSection: some View {
+    private var header: some View {
+        HStack(alignment: .bottom) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Models")
+                    .font(.largeTitle.bold())
+                Text("Choose the local speech model and where inference runs.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            Label(
+                "\(runtime.config.transcriptionProvider.title) · \(runtime.config.computeBackend.title)",
+                systemImage: "cpu"
+            )
+            .font(.subheadline.weight(.semibold))
+            .padding(.vertical, 8)
+            .padding(.horizontal, 14)
+            .background(.regularMaterial, in: Capsule())
+        }
+    }
+
+    private var providerPanel: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label("Service", systemImage: "power")
+            Label("Speech-to-text engine", systemImage: "waveform")
                 .font(.title3.bold())
 
-            Toggle("Enable service", isOn: Binding(
-                get: { runtime.serviceEnabled },
-                set: { runtime.setServiceEnabled($0) }
-            ))
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Hotkey mode")
-                    .font(.subheadline.weight(.medium))
-                Picker("Hotkey", selection: Binding(
-                    get: { runtime.config.hotkeyMode },
-                    set: { runtime.setHotkeyMode($0) }
-                )) {
-                    Text("Fn hold").tag(HotkeyMode.fnHold)
-                    Text("Fn + Space hold").tag(HotkeyMode.fnSpaceHold)
+            HStack(spacing: 10) {
+                ForEach(TranscriptionProvider.allCases, id: \.self) { provider in
+                    providerButton(provider)
                 }
-                .pickerStyle(.segmented)
-            }
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Language mode")
-                    .font(.subheadline.weight(.medium))
-                Picker("Language mode", selection: Binding(
-                    get: { runtime.config.languageMode },
-                    set: { runtime.setLanguageMode($0) }
-                )) {
-                    Text("Auto").tag(LanguageMode.auto)
-                    Text("English").tag(LanguageMode.english)
-                    Text("Hinglish Roman").tag(LanguageMode.hinglishRoman)
-                }
-                .pickerStyle(.segmented)
             }
         }
         .glassCard()
     }
 
-    private var cleanupSection: some View {
+    private func providerButton(_ provider: TranscriptionProvider) -> some View {
+        Button {
+            runtime.setTranscriptionProvider(provider)
+        } label: {
+            HStack(spacing: 10) {
+                Image(systemName: provider == .parakeetMLX ? "bolt.fill" : "waveform.badge.magnifyingglass")
+                    .foregroundStyle(runtime.config.transcriptionProvider == provider ? .blue : .secondary)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(provider.title)
+                        .font(.subheadline.weight(.semibold))
+                    Text(provider.subtitle)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                if runtime.config.transcriptionProvider == provider {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundStyle(.green)
+                }
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity)
+            .macPanel(cornerRadius: 8)
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var computePanel: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label("Cleanup Providers", systemImage: "wand.and.stars")
+            Label("Device", systemImage: "cpu")
                 .font(.title3.bold())
 
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Provider chain")
-                    .font(.subheadline.weight(.medium))
-                Picker("Provider chain", selection: Binding(
-                    get: { runtime.config.cleanupProvider },
-                    set: { runtime.setCleanupProvider($0) }
-                )) {
-                    Text("Groq → LM Studio → Deterministic").tag(CleanupProvider.priority)
-                    Text("Deterministic only").tag(CleanupProvider.deterministic)
+            Picker("Device", selection: Binding(
+                get: { runtime.config.computeBackend },
+                set: { runtime.setComputeBackend($0) }
+            )) {
+                ForEach(ComputeBackend.allCases, id: \.self) { backend in
+                    Text(backend.title).tag(backend)
                 }
-                .pickerStyle(.segmented)
             }
+            .pickerStyle(.segmented)
+
+            Text(deviceDescription)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .glassCard()
+    }
+
+    private var deviceDescription: String {
+        switch runtime.config.computeBackend {
+        case .automatic:
+            return "WhisperKit chooses the best Core ML compute units for this Mac."
+        case .cpu:
+            return "Forces supported speech models onto CPU-only inference."
+        case .gpu:
+            return "Prefers GPU-backed inference for supported speech models."
+        }
+    }
+
+    @ViewBuilder
+    private var activeModelPanel: some View {
+        switch runtime.config.transcriptionProvider {
+        case .whisperKit:
+            modelList(
+                title: "WhisperKit models",
+                subtitle: "Core ML Whisper models download on demand through WhisperKit.",
+                models: WhisperModel.allCases.map { model in
+                    ModelOption(
+                        id: model.rawValue,
+                        title: model.title,
+                        detail: model.qualityLabel,
+                        size: model.sizeLabel,
+                        selected: runtime.config.whisperModel == model,
+                        recommended: model == .largeV3Turbo,
+                        action: { runtime.setWhisperModel(model) }
+                    )
+                }
+            )
+        case .parakeetMLX:
+            VStack(alignment: .leading, spacing: 12) {
+                modelList(
+                    title: "NVIDIA Parakeet models",
+                    subtitle: "Parakeet choices are aligned with OpenWhispr, but the MLX backend still needs to be linked before transcription can run.",
+                    models: ParakeetModel.allCases.map { model in
+                        ModelOption(
+                            id: model.rawValue,
+                            title: model.title,
+                            detail: model.languageLabel,
+                            size: model.sizeLabel,
+                            selected: runtime.config.parakeetModel == model,
+                            recommended: model == .tdt06BV3,
+                            action: { runtime.setParakeetModel(model) }
+                        )
+                    }
+                )
+
+                Label("Parakeet is selectable now; dictation will report that MLX Parakeet is not linked until the backend is implemented.", systemImage: "exclamationmark.triangle.fill")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.orange)
+                    .padding(.horizontal, 2)
+            }
+        }
+    }
+
+    private func modelList(title: String, subtitle: String, models: [ModelOption]) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
+                Label(title, systemImage: "square.stack.3d.up.fill")
+                    .font(.title3.bold())
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            VStack(spacing: 8) {
+                ForEach(models) { model in
+                    Button(action: model.action) {
+                        HStack(spacing: 10) {
+                            Circle()
+                                .fill(model.selected ? Color.green : Color.secondary.opacity(0.25))
+                                .frame(width: 8, height: 8)
+                            VStack(alignment: .leading, spacing: 2) {
+                                HStack(spacing: 6) {
+                                    Text(model.title)
+                                        .font(.subheadline.weight(.semibold))
+                                    if model.recommended {
+                                        Text("Recommended")
+                                            .font(.caption2.weight(.bold))
+                                            .padding(.horizontal, 6)
+                                            .padding(.vertical, 2)
+                                            .background(.blue.opacity(0.12), in: Capsule())
+                                    }
+                                }
+                                Text(model.detail)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Text(model.size)
+                                .font(.caption.monospacedDigit())
+                                .foregroundStyle(.secondary)
+                            if model.selected {
+                                Text("Active")
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(.blue)
+                            }
+                        }
+                        .padding(12)
+                        .macPanel(cornerRadius: 8)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+        .glassCard()
+    }
+
+    private var cleanupPanel: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label("Text cleanup", systemImage: "wand.and.stars")
+                .font(.title3.bold())
+
+            Picker("Provider chain", selection: Binding(
+                get: { runtime.config.cleanupProvider },
+                set: { runtime.setCleanupProvider($0) }
+            )) {
+                Text("Groq -> LM Studio -> Deterministic").tag(CleanupProvider.priority)
+                Text("Deterministic only").tag(CleanupProvider.deterministic)
+            }
+            .pickerStyle(.segmented)
 
             Toggle("Enable LM Studio fallback", isOn: Binding(
                 get: { runtime.config.lmstudioEnabled },
@@ -113,113 +239,43 @@ struct SettingsView: View {
             ))
 
             settingsField(
-                label: "LM Studio base URL",
+                label: "LM Studio URL",
                 placeholder: "http://127.0.0.1:1234/v1",
-                text: $draft.lmstudioBaseURL,
-                onApply: { runtime.setLMStudioBaseURL(draft.lmstudioBaseURL) }
+                text: $lmstudioBaseURL,
+                onApply: { runtime.setLMStudioBaseURL(lmstudioBaseURL) }
             )
             settingsField(
-                label: "Start timeout (ms)",
-                placeholder: "8000",
-                text: $draft.lmstudioStartTimeoutMs,
-                onApply: {
-                    runtime.setLMStudioStartTimeoutMs(
-                        Int(draft.lmstudioStartTimeoutMs) ?? runtime.config.lmstudioStartTimeoutMs
-                    )
-                }
-            )
-            settingsField(
-                label: "Groq base URL",
+                label: "Groq URL",
                 placeholder: "https://api.groq.com/openai/v1",
-                text: $draft.groqBaseURL,
-                onApply: { runtime.setGroqBaseURL(draft.groqBaseURL) }
+                text: $groqBaseURL,
+                onApply: { runtime.setGroqBaseURL(groqBaseURL) }
             )
             settingsField(
                 label: "Groq model",
                 placeholder: "meta-llama/llama-4-maverick-17b-128e-instruct",
-                text: $draft.groqModel,
-                onApply: { runtime.setGroqModel(draft.groqModel) }
+                text: $groqModel,
+                onApply: { runtime.setGroqModel(groqModel) }
             )
 
-            Divider()
-
-            VStack(alignment: .leading, spacing: 8) {
-                HStack(spacing: 6) {
-                    Image(systemName: "key.fill")
-                        .foregroundStyle(.secondary)
-                    Text("Groq API key:")
-                        .font(.subheadline.weight(.semibold))
-                    Text(draft.groqKeyMaskedState)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-
-                SecureField("gsk_...", text: $groqKey)
-                    .textFieldStyle(.roundedBorder)
-
-                HStack(spacing: 10) {
-                    Button("Save key") {
-                        runtime.setGroqKey(groqKey)
-                        groqKey = ""
-                        onRefreshDraft()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(groqKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-
-                    Button("Clear key") {
-                        runtime.clearGroqKey()
-                        onRefreshDraft()
-                    }
-                    .buttonStyle(.bordered)
-                }
-            }
-        }
-        .glassCard()
-    }
-
-    private var indicatorSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Label("Indicator & Paste", systemImage: "rectangle.inset.filled.and.person.filled")
-                .font(.title3.bold())
-
-            Toggle("Floating indicator", isOn: Binding(
-                get: { runtime.config.floatingIndicatorEnabled },
-                set: { runtime.setFloatingIndicatorEnabled($0) }
-            ))
-
-            settingsField(
-                label: "Hide delay (ms)",
-                placeholder: "1000",
-                text: $draft.floatingIndicatorHideDelayMs,
-                onApply: {
-                    runtime.setFloatingIndicatorHideDelayMs(
-                        Int(draft.floatingIndicatorHideDelayMs) ?? runtime.config.floatingIndicatorHideDelayMs
-                    )
-                }
-            )
-
-            Toggle("Option+Cmd+V paste-last shortcut", isOn: Binding(
-                get: { runtime.config.pasteLastShortcutEnabled },
-                set: { runtime.setPasteLastShortcutEnabled($0) }
-            ))
-            Toggle("Keep dictation in clipboard if paste fails", isOn: Binding(
-                get: { runtime.config.pasteFailureKeepDictationInClipboard },
-                set: { runtime.setPasteFailureKeepDictationInClipboard($0) }
-            ))
-        }
-        .glassCard()
-    }
-
-    private var startupSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Label("Startup", systemImage: "arrow.up.circle")
-                .font(.title3.bold())
+            SecureField(runtime.hasGroqAPIKey() ? "Saved in Keychain" : "Groq API key", text: $groqKey)
+                .textFieldStyle(.roundedBorder)
 
             HStack(spacing: 10) {
-                Button("Install auto-start") { runtime.installAutostart() }
-                    .buttonStyle(.bordered)
-                Button("Uninstall auto-start") { runtime.uninstallAutostart() }
-                    .buttonStyle(.bordered)
+                Button {
+                    runtime.setGroqKey(groqKey)
+                    groqKey = ""
+                } label: {
+                    Label("Save key", systemImage: "key.fill")
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(groqKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+
+                Button {
+                    runtime.clearGroqKey()
+                } label: {
+                    Label("Clear key", systemImage: "trash")
+                }
+                .buttonStyle(.bordered)
             }
         }
         .glassCard()
@@ -234,11 +290,29 @@ struct SettingsView: View {
         HStack {
             Text(label)
                 .font(.subheadline)
-                .frame(width: 160, alignment: .leading)
+                .frame(width: 130, alignment: .leading)
             TextField(placeholder, text: text)
                 .textFieldStyle(.roundedBorder)
-            Button("Apply", action: onApply)
-                .buttonStyle(.bordered)
+            Button(action: onApply) {
+                Label("Apply", systemImage: "checkmark")
+            }
+            .buttonStyle(.bordered)
         }
     }
+
+    private func refreshDraft() {
+        lmstudioBaseURL = runtime.config.lmstudioBaseURL
+        groqBaseURL = runtime.config.groqBaseURL
+        groqModel = runtime.config.groqModel
+    }
+}
+
+private struct ModelOption: Identifiable {
+    let id: String
+    let title: String
+    let detail: String
+    let size: String
+    let selected: Bool
+    let recommended: Bool
+    let action: () -> Void
 }

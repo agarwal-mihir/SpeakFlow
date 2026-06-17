@@ -28,6 +28,10 @@ public final class JSONConfigStore: ConfigStoreProtocol {
         var cfg = AppConfig()
         if let raw = obj["hotkey_mode"] as? String, let mode = HotkeyMode(rawValue: raw) { cfg.hotkeyMode = mode }
         if let raw = obj["language_mode"] as? String, let mode = LanguageMode(rawValue: raw) { cfg.languageMode = mode }
+        if let raw = obj["transcription_provider"] as? String, let provider = TranscriptionProvider(rawValue: raw) { cfg.transcriptionProvider = provider }
+        if let raw = obj["whisper_model"] as? String, let model = WhisperModel(rawValue: raw) { cfg.whisperModel = model }
+        if let raw = obj["parakeet_model"] as? String, let model = ParakeetModel(rawValue: raw) { cfg.parakeetModel = model }
+        if let raw = obj["compute_backend"] as? String, let backend = ComputeBackend(rawValue: raw) { cfg.computeBackend = backend }
         if let value = obj["lmstudio_enabled"] as? Bool { cfg.lmstudioEnabled = value }
         if let value = obj["lmstudio_base_url"] as? String { cfg.lmstudioBaseURL = value }
         if let value = obj["lmstudio_auto_start"] as? Bool { cfg.lmstudioAutoStart = value }
@@ -66,6 +70,10 @@ public final class JSONConfigStore: ConfigStoreProtocol {
         var merged = preserve
         merged["hotkey_mode"] = config.hotkeyMode.rawValue
         merged["language_mode"] = config.languageMode.rawValue
+        merged["transcription_provider"] = config.transcriptionProvider.rawValue
+        merged["whisper_model"] = config.whisperModel.rawValue
+        merged["parakeet_model"] = config.parakeetModel.rawValue
+        merged["compute_backend"] = config.computeBackend.rawValue
         merged["lmstudio_enabled"] = config.lmstudioEnabled
         merged["lmstudio_base_url"] = config.lmstudioBaseURL
         merged["lmstudio_auto_start"] = config.lmstudioAutoStart

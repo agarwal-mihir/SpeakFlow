@@ -2,36 +2,29 @@ import Domain
 import SwiftUI
 
 private enum SidebarTab: String, CaseIterable, Identifiable {
-    case home
-    case history
-    case settings
-    case permissions
+    case dictation
+    case models
 
     var id: String { rawValue }
 
     var title: String {
         switch self {
-        case .home: return "Home"
-        case .history: return "History"
-        case .settings: return "Settings"
-        case .permissions: return "Permissions"
+        case .dictation: return "Dictation"
+        case .models: return "Models"
         }
     }
 
     var icon: String {
         switch self {
-        case .home: return "house.fill"
-        case .history: return "clock.arrow.circlepath"
-        case .settings: return "gearshape.fill"
-        case .permissions: return "checkmark.shield.fill"
+        case .dictation: return "mic.fill"
+        case .models: return "cpu.fill"
         }
     }
 }
 
 public struct RootView: View {
     @ObservedObject var runtime: AppRuntime
-    @State private var selectedTab: SidebarTab = .home
-    @State private var settingsDraft = SettingsDraft()
+    @State private var selectedTab: SidebarTab = .dictation
 
     public init(runtime: AppRuntime) {
         self.runtime = runtime
@@ -45,13 +38,12 @@ public struct RootView: View {
         }
         .frame(minWidth: 980, minHeight: 640)
         .onAppear {
-            refreshSettingsDraft()
             if runtime.requiresPermissionOnboarding {
-                selectedTab = .permissions
+                selectedTab = .dictation
             }
         }
         .onChange(of: runtime.requiresPermissionOnboarding) { _, missing in
-            if missing { selectedTab = .permissions }
+            if missing { selectedTab = .dictation }
         }
     }
 
@@ -65,7 +57,7 @@ public struct RootView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("SpeakFlow")
                     .font(.title.bold())
-                Text("Local dictation")
+                Text(runtime.config.transcriptionProvider.title)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -83,6 +75,12 @@ public struct RootView: View {
         VStack(alignment: .leading, spacing: 8) {
             Label(runtime.state.rawValue, systemImage: "waveform")
                 .font(.subheadline.bold())
+            Label(
+                "\(runtime.config.transcriptionProvider.title) · \(runtime.config.computeBackend.title)",
+                systemImage: "cpu"
+            )
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(.secondary)
             Label(
                 runtime.permissionState.dictationReady ? "Dictation ready" : "Permissions missing",
                 systemImage: runtime.permissionState.dictationReady ? "checkmark.circle.fill" : "exclamationmark.circle.fill"
@@ -104,22 +102,10 @@ public struct RootView: View {
     @ViewBuilder
     private var mainContent: some View {
         switch selectedTab {
-        case .home:
-            HomeView(runtime: runtime, onOpenSettings: { selectedTab = .settings })
-        case .history:
-            HistoryView(runtime: runtime)
-        case .settings:
-            SettingsView(
-                runtime: runtime,
-                draft: $settingsDraft,
-                onRefreshDraft: refreshSettingsDraft
-            )
-        case .permissions:
-            PermissionsView(runtime: runtime)
+        case .dictation:
+            HomeView(runtime: runtime, onOpenModels: { selectedTab = .models })
+        case .models:
+            ModelsView(runtime: runtime)
         }
-    }
-
-    private func refreshSettingsDraft() {
-        settingsDraft = SettingsDraft(config: runtime.config, hasGroqKey: runtime.hasGroqAPIKey())
     }
 }

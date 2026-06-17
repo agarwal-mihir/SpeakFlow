@@ -13,7 +13,7 @@ public struct PipelineOutput: Sendable {
 }
 
 public actor TranscriptionPipelineActor {
-    private let stt: SpeechTranscriptionServiceProtocol
+    private var stt: SpeechTranscriptionServiceProtocol
     private let cleanup: CleanupServiceProtocol
     private let inserter: TextInsertionServiceProtocol
     private let history: HistoryStoreProtocol
@@ -29,6 +29,10 @@ public actor TranscriptionPipelineActor {
         self.cleanup = cleanup
         self.inserter = inserter
         self.history = history
+    }
+
+    public func setTranscriptionService(_ service: SpeechTranscriptionServiceProtocol) {
+        stt = service
     }
 
     public func process(_ utterance: DictationUtterance, keepOnFailure: Bool) async throws -> PipelineOutput {

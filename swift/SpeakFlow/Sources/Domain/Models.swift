@@ -16,6 +16,107 @@ public enum CleanupProvider: String, Codable, CaseIterable, Sendable {
     case deterministic
 }
 
+public enum TranscriptionProvider: String, Codable, CaseIterable, Sendable {
+    case whisperKit = "whisperkit"
+    case parakeetMLX = "parakeet_mlx"
+
+    public var title: String {
+        switch self {
+        case .whisperKit: return "WhisperKit"
+        case .parakeetMLX: return "NVIDIA Parakeet"
+        }
+    }
+
+    public var subtitle: String {
+        switch self {
+        case .whisperKit: return "Core ML Whisper models"
+        case .parakeetMLX: return "MLX Parakeet ASR"
+        }
+    }
+}
+
+public enum ComputeBackend: String, Codable, CaseIterable, Sendable {
+    case automatic
+    case cpu
+    case gpu
+
+    public var title: String {
+        switch self {
+        case .automatic: return "Auto"
+        case .cpu: return "CPU"
+        case .gpu: return "GPU"
+        }
+    }
+}
+
+public enum WhisperModel: String, Codable, CaseIterable, Sendable {
+    case tiny
+    case base
+    case small
+    case medium
+    case largeV3 = "large-v3"
+    case largeV3Turbo = "large-v3-turbo"
+
+    public var title: String {
+        switch self {
+        case .tiny: return "Tiny"
+        case .base: return "Base"
+        case .small: return "Small"
+        case .medium: return "Medium"
+        case .largeV3: return "Large v3"
+        case .largeV3Turbo: return "Large v3 Turbo"
+        }
+    }
+
+    public var sizeLabel: String {
+        switch self {
+        case .tiny: return "75 MB"
+        case .base: return "142 MB"
+        case .small: return "466 MB"
+        case .medium: return "1.5 GB"
+        case .largeV3: return "3 GB"
+        case .largeV3Turbo: return "1.6 GB"
+        }
+    }
+
+    public var qualityLabel: String {
+        switch self {
+        case .tiny: return "Fastest"
+        case .base: return "Balanced"
+        case .small: return "Better quality"
+        case .medium: return "High quality"
+        case .largeV3: return "Best quality"
+        case .largeV3Turbo: return "Fast, high quality"
+        }
+    }
+}
+
+public enum ParakeetModel: String, Codable, CaseIterable, Sendable {
+    case tdt06BV3 = "parakeet-tdt-0.6b-v3"
+    case unifiedEN06B = "parakeet-unified-en-0.6b"
+
+    public var title: String {
+        switch self {
+        case .tdt06BV3: return "Parakeet TDT 0.6B"
+        case .unifiedEN06B: return "Parakeet Unified EN 0.6B"
+        }
+    }
+
+    public var sizeLabel: String {
+        switch self {
+        case .tdt06BV3: return "680 MB"
+        case .unifiedEN06B: return "631 MB"
+        }
+    }
+
+    public var languageLabel: String {
+        switch self {
+        case .tdt06BV3: return "Multilingual"
+        case .unifiedEN06B: return "English"
+        }
+    }
+}
+
 public enum ServiceState: String, Sendable {
     case idle = "Idle"
     case recording = "Recording"
@@ -26,6 +127,10 @@ public enum ServiceState: String, Sendable {
 public struct AppConfig: Codable, Equatable, Sendable {
     public var hotkeyMode: HotkeyMode = .fnHold
     public var languageMode: LanguageMode = .auto
+    public var transcriptionProvider: TranscriptionProvider = .whisperKit
+    public var whisperModel: WhisperModel = .largeV3
+    public var parakeetModel: ParakeetModel = .tdt06BV3
+    public var computeBackend: ComputeBackend = .automatic
     public var lmstudioEnabled: Bool = true
     public var lmstudioBaseURL: String = "http://127.0.0.1:1234/v1"
     public var lmstudioAutoStart: Bool = true

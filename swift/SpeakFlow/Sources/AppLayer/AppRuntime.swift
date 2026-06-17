@@ -26,7 +26,7 @@ public final class AppRuntime: ObservableObject {
     private let hotkeyService: HotkeyService
     private let audioService: AudioCaptureService
     private let cleanupService: CleanupService
-    private let sttService: WhisperKitTranscriptionService
+    private var sttService: SpeechTranscriptionServiceProtocol
     private let autoStartService: AutoStartService
     private let pipeline: TranscriptionPipelineActor
     private let indicator: FloatingIndicatorController
@@ -58,7 +58,7 @@ public final class AppRuntime: ObservableObject {
         permissionService = PermissionService()
         hotkeyService = HotkeyService()
         audioService = AudioCaptureService()
-        sttService = WhisperKitTranscriptionService()
+        sttService = Self.makeTranscriptionService(for: loadedConfig)
         cleanupService = CleanupService(configProvider: { [weak configStore] in
             (try? configStore?.load()) ?? AppConfig()
         }, secretStore: secretStore)
@@ -180,6 +180,28 @@ public final class AppRuntime: ObservableObject {
         saveConfig()
     }
 
+    public func setTranscriptionProvider(_ provider: TranscriptionProvider) {
+        config.transcriptionProvider = provider
+        applyTranscriptionConfig()
+    }
+
+    public func setWhisperModel(_ model: WhisperModel) {
+        config.whisperModel = model
+        config.transcriptionProvider = .whisperKit
+        applyTranscriptionConfig()
+    }
+
+    public func setParakeetModel(_ model: ParakeetModel) {
+        config.parakeetModel = model
+        config.transcriptionProvider = .parakeetMLX
+        applyTranscriptionConfig()
+    }
+
+    public func setComputeBackend(_ backend: ComputeBackend) {
+        config.computeBackend = backend
+        applyTranscriptionConfig()
+    }
+
     public func setCleanupProvider(_ provider: CleanupProvider) {
         config.cleanupProvider = provider
         saveConfig()
@@ -290,6 +312,31 @@ public final class AppRuntime: ObservableObject {
     private func saveConfig() {
         try? configStore.save(config)
         refreshRuntimeUIState()
+    }
+
+    private func applyTranscriptionConfig() {
+        sttService = Self.makeTranscriptionService(for: config)
+        let service = sttService
+        Task {
+            await pipeline.setTranscriptionService(service)
+        }
+        saveConfig()
+        AppLogger.info("Transcription config updated: provider=\(config.transcriptionProvider.rawValue) whisper=\(config.whisperModel.rawValue) parakeet=\(config.parakeetModel.rawValue) compute=\(config.computeBackend.rawValue)")
+    }
+
+    private static func makeTranscriptionService(for config: AppConfig) -> SpeechTranscriptionServiceProtocol {
+        switch config.transcriptionProvider {
+        case .whisperKit:
+            return WhisperKitTranscriptionService(
+                modelName: config.whisperModel.rawValue,
+                computeBackend: config.computeBackend
+            )
+        case .parakeetMLX:
+            return ParakeetMLXTranscriptionService(
+                model: config.parakeetModel,
+                computeBackend: config.computeBackend
+            )
+        }
     }
 
     private func stopRecordingIfNeeded(discardAudio: Bool) {
