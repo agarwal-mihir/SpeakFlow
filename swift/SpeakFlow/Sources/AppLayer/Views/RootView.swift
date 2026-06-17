@@ -3,21 +3,21 @@ import SwiftUI
 
 private enum SidebarTab: String, CaseIterable, Identifiable {
     case dictation
-    case models
+    case settings
 
     var id: String { rawValue }
 
     var title: String {
         switch self {
         case .dictation: return "Dictation"
-        case .models: return "Models"
+        case .settings: return "Settings"
         }
     }
 
     var icon: String {
         switch self {
         case .dictation: return "mic.fill"
-        case .models: return "cpu.fill"
+        case .settings: return "gearshape.fill"
         }
     }
 }
@@ -103,9 +103,9 @@ public struct RootView: View {
     private var mainContent: some View {
         switch selectedTab {
         case .dictation:
-            HomeView(runtime: runtime, onOpenModels: { selectedTab = .models })
-        case .models:
-            ModelsView(runtime: runtime)
+            HomeView(runtime: runtime, onOpenSettings: { selectedTab = .settings })
+        case .settings:
+            SettingsView(runtime: runtime)
         }
     }
 }

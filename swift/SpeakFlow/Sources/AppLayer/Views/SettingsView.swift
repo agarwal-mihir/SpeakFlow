@@ -1,7 +1,7 @@
 import Domain
 import SwiftUI
 
-struct ModelsView: View {
+struct SettingsView: View {
     @ObservedObject var runtime: AppRuntime
     @State private var lmstudioBaseURL = ""
     @State private var groqBaseURL = ""
@@ -12,6 +12,8 @@ struct ModelsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 header
+                behaviorPanel
+                permissionPanel
                 providerPanel
                 computePanel
                 activeModelPanel
@@ -28,9 +30,9 @@ struct ModelsView: View {
     private var header: some View {
         HStack(alignment: .bottom) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Models")
+                Text("Settings")
                     .font(.largeTitle.bold())
-                Text("Choose the local speech model and where inference runs.")
+                Text("Configure dictation behavior, permissions, speech models, and cleanup.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -44,6 +46,131 @@ struct ModelsView: View {
             .padding(.horizontal, 14)
             .background(.regularMaterial, in: Capsule())
         }
+    }
+
+    private var behaviorPanel: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Label("Dictation behavior", systemImage: "slider.horizontal.3")
+                .font(.title3.bold())
+
+            Grid(alignment: .leading, horizontalSpacing: 18, verticalSpacing: 14) {
+                GridRow {
+                    settingToggle(
+                        "Service",
+                        systemImage: "power",
+                        isOn: Binding(
+                            get: { runtime.serviceEnabled },
+                            set: { runtime.setServiceEnabled($0) }
+                        )
+                    )
+                    settingToggle(
+                        "Floating indicator",
+                        systemImage: "rectangle.inset.filled.and.person.filled",
+                        isOn: Binding(
+                            get: { runtime.config.floatingIndicatorEnabled },
+                            set: { runtime.setFloatingIndicatorEnabled($0) }
+                        )
+                    )
+                }
+                GridRow {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Label("Hotkey", systemImage: "keyboard")
+                            .font(.subheadline.weight(.semibold))
+                        Picker("Hotkey", selection: Binding(
+                            get: { runtime.config.hotkeyMode },
+                            set: { runtime.setHotkeyMode($0) }
+                        )) {
+                            Text("Fn hold").tag(HotkeyMode.fnHold)
+                            Text("Fn + Space hold").tag(HotkeyMode.fnSpaceHold)
+                        }
+                        .pickerStyle(.segmented)
+                    }
+                    VStack(alignment: .leading, spacing: 6) {
+                        Label("Language", systemImage: "textformat")
+                            .font(.subheadline.weight(.semibold))
+                        Picker("Language", selection: Binding(
+                            get: { runtime.config.languageMode },
+                            set: { runtime.setLanguageMode($0) }
+                        )) {
+                            Text("Auto").tag(LanguageMode.auto)
+                            Text("English").tag(LanguageMode.english)
+                            Text("Hinglish").tag(LanguageMode.hinglishRoman)
+                        }
+                        .pickerStyle(.segmented)
+                    }
+                }
+            }
+
+            Toggle("Keep text in clipboard if paste fails", isOn: Binding(
+                get: { runtime.config.pasteFailureKeepDictationInClipboard },
+                set: { runtime.setPasteFailureKeepDictationInClipboard($0) }
+            ))
+            .toggleStyle(.checkbox)
+        }
+        .glassCard()
+    }
+
+    private var permissionPanel: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Label("Permissions", systemImage: "checkmark.shield.fill")
+                .font(.title3.bold())
+
+            HStack(spacing: 10) {
+                permissionItem(
+                    "Microphone",
+                    granted: runtime.permissionState.microphone,
+                    action: { runtime.requestPermission(.microphone) }
+                )
+                permissionItem(
+                    "Input Monitoring",
+                    granted: runtime.permissionState.inputMonitoring,
+                    action: { runtime.requestPermission(.inputMonitoring) }
+                )
+                permissionItem(
+                    "Auto-paste",
+                    granted: runtime.permissionState.accessibility,
+                    optional: true,
+                    action: { runtime.requestPermission(.accessibility) }
+                )
+            }
+        }
+        .glassCard()
+    }
+
+    private func settingToggle(_ title: String, systemImage: String, isOn: Binding<Bool>) -> some View {
+        HStack {
+            Label(title, systemImage: systemImage)
+                .font(.subheadline.weight(.semibold))
+            Spacer()
+            Toggle(title, isOn: isOn)
+                .labelsHidden()
+                .toggleStyle(.switch)
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    private func permissionItem(_ title: String, granted: Bool, optional: Bool = false, action: @escaping () -> Void) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: granted ? "checkmark.circle.fill" : "exclamationmark.circle.fill")
+                .foregroundStyle(granted ? .green : (optional ? .secondary : .orange))
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.subheadline.weight(.semibold))
+                Text(granted ? "Granted" : optional ? "Optional" : "Required")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            if !granted {
+                Button(action: action) {
+                    Label("Grant", systemImage: "arrow.up.forward.app")
+                }
+                .buttonStyle(.bordered)
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity)
+        .macPanel(cornerRadius: 8)
     }
 
     private var providerPanel: some View {

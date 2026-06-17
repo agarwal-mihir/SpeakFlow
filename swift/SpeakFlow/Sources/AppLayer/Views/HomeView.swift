@@ -3,14 +3,16 @@ import SwiftUI
 
 struct HomeView: View {
     @ObservedObject var runtime: AppRuntime
-    var onOpenModels: () -> Void
+    var onOpenSettings: () -> Void
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 header
+                if runtime.requiresPermissionOnboarding {
+                    permissionBanner
+                }
                 dictationPanel
-                permissionPanel
                 recentPanel
             }
             .padding(28)
@@ -56,6 +58,31 @@ struct HomeView: View {
         }
     }
 
+    private var permissionBanner: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .font(.title3)
+                .foregroundStyle(.orange)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Dictation needs permissions")
+                    .font(.subheadline.weight(.semibold))
+                Text("Grant Microphone and Input Monitoring in Settings to start dictating.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            Button("Open Settings", action: onOpenSettings)
+                .buttonStyle(.borderedProminent)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(.orange.opacity(0.1))
+                .stroke(.orange.opacity(0.3), lineWidth: 1)
+        )
+    }
+
     private var dictationPanel: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 12) {
@@ -79,122 +106,61 @@ struct HomeView: View {
                 )
             }
 
-            if runtime.state == .recording {
-                VStack(spacing: 6) {
-                    AudioVisualizerView(level: runtime.audioLevel, barCount: 32, isActive: true)
-                    Text("Recording...")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.green)
-                }
-                .padding(.vertical, 4)
-            } else if runtime.state == .transcribing {
-                HStack(spacing: 8) {
-                    ProgressView()
-                        .controlSize(.small)
-                    Text("Transcribing...")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.orange)
-                }
-                .padding(.vertical, 4)
-            }
+            liveStatus
 
             if !runtime.lastError.isEmpty {
                 Label(runtime.lastError, systemImage: "exclamationmark.triangle.fill")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.red)
             }
-
-            Divider()
-
-            Grid(alignment: .leading, horizontalSpacing: 18, verticalSpacing: 14) {
-                GridRow {
-                    settingToggle(
-                        "Service",
-                        systemImage: "power",
-                        isOn: Binding(
-                            get: { runtime.serviceEnabled },
-                            set: { runtime.setServiceEnabled($0) }
-                        )
-                    )
-                    settingToggle(
-                        "Floating indicator",
-                        systemImage: "rectangle.inset.filled.and.person.filled",
-                        isOn: Binding(
-                            get: { runtime.config.floatingIndicatorEnabled },
-                            set: { runtime.setFloatingIndicatorEnabled($0) }
-                        )
-                    )
-                }
-                GridRow {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Label("Hotkey", systemImage: "keyboard")
-                            .font(.subheadline.weight(.semibold))
-                        Picker("Hotkey", selection: Binding(
-                            get: { runtime.config.hotkeyMode },
-                            set: { runtime.setHotkeyMode($0) }
-                        )) {
-                            Text("Fn hold").tag(HotkeyMode.fnHold)
-                            Text("Fn + Space hold").tag(HotkeyMode.fnSpaceHold)
-                        }
-                        .pickerStyle(.segmented)
-                    }
-                    VStack(alignment: .leading, spacing: 6) {
-                        Label("Language", systemImage: "textformat")
-                            .font(.subheadline.weight(.semibold))
-                        Picker("Language", selection: Binding(
-                            get: { runtime.config.languageMode },
-                            set: { runtime.setLanguageMode($0) }
-                        )) {
-                            Text("Auto").tag(LanguageMode.auto)
-                            Text("English").tag(LanguageMode.english)
-                            Text("Hinglish").tag(LanguageMode.hinglishRoman)
-                        }
-                        .pickerStyle(.segmented)
-                    }
-                }
-            }
-
-            HStack(spacing: 12) {
-                Button(action: onOpenModels) {
-                    Label("Choose model", systemImage: "cpu")
-                }
-                .buttonStyle(.borderedProminent)
-
-                Toggle("Keep text in clipboard if paste fails", isOn: Binding(
-                    get: { runtime.config.pasteFailureKeepDictationInClipboard },
-                    set: { runtime.setPasteFailureKeepDictationInClipboard($0) }
-                ))
-                .toggleStyle(.checkbox)
-            }
         }
         .glassCard()
     }
 
-    private var permissionPanel: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Label("Permissions", systemImage: "checkmark.shield.fill")
-                .font(.title3.bold())
-
-            HStack(spacing: 10) {
-                permissionItem(
-                    "Microphone",
-                    granted: runtime.permissionState.microphone,
-                    action: { runtime.requestPermission(.microphone) }
-                )
-                permissionItem(
-                    "Input Monitoring",
-                    granted: runtime.permissionState.inputMonitoring,
-                    action: { runtime.requestPermission(.inputMonitoring) }
-                )
-                permissionItem(
-                    "Auto-paste",
-                    granted: runtime.permissionState.accessibility,
-                    optional: true,
-                    action: { runtime.requestPermission(.accessibility) }
-                )
+    @ViewBuilder
+    private var liveStatus: some View {
+        switch runtime.state {
+        case .recording:
+            VStack(spacing: 8) {
+                AudioVisualizerView(level: runtime.audioLevel, barCount: 32, isActive: true)
+                Text("Recording...")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.green)
             }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 16)
+        case .transcribing:
+            HStack(spacing: 8) {
+                ProgressView()
+                    .controlSize(.small)
+                Text("Transcribing...")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.orange)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 24)
+        default:
+            VStack(spacing: 10) {
+                Image(systemName: "mic.fill")
+                    .font(.system(size: 34))
+                    .foregroundStyle(.secondary)
+                Text(idleHint)
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 22)
         }
-        .glassCard()
+    }
+
+    private var idleHint: String {
+        guard runtime.serviceEnabled else {
+            return "Service is off. Enable it in Settings to dictate."
+        }
+        switch runtime.config.hotkeyMode {
+        case .fnHold: return "Hold Fn and speak to dictate"
+        case .fnSpaceHold: return "Hold Fn + Space and speak to dictate"
+        }
     }
 
     private var recentPanel: some View {
@@ -243,42 +209,6 @@ struct HomeView: View {
             }
         }
         .glassCard()
-    }
-
-    private func settingToggle(_ title: String, systemImage: String, isOn: Binding<Bool>) -> some View {
-        HStack {
-            Label(title, systemImage: systemImage)
-                .font(.subheadline.weight(.semibold))
-            Spacer()
-            Toggle(title, isOn: isOn)
-                .labelsHidden()
-                .toggleStyle(.switch)
-        }
-        .frame(maxWidth: .infinity)
-    }
-
-    private func permissionItem(_ title: String, granted: Bool, optional: Bool = false, action: @escaping () -> Void) -> some View {
-        HStack(spacing: 10) {
-            Image(systemName: granted ? "checkmark.circle.fill" : "exclamationmark.circle.fill")
-                .foregroundStyle(granted ? .green : (optional ? .secondary : .orange))
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.subheadline.weight(.semibold))
-                Text(granted ? "Granted" : optional ? "Optional" : "Required")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            Spacer()
-            if !granted {
-                Button(action: action) {
-                    Label("Grant", systemImage: "arrow.up.forward.app")
-                }
-                .buttonStyle(.bordered)
-            }
-        }
-        .padding(12)
-        .frame(maxWidth: .infinity)
-        .macPanel(cornerRadius: 8)
     }
 }
 
