@@ -39,6 +39,8 @@ public final class AppRuntime: ObservableObject {
     private var statusBarController: StatusBarController?
     private var meterTimer: Timer?
     private var didRunLaunchPermissionPrompt = false
+    private var activeDictationTargetAppName: String?
+    private var activeDictationTargetPID: Int32?
 
     public init() {
         configStore = JSONConfigStore()
@@ -91,6 +93,7 @@ public final class AppRuntime: ObservableObject {
         refreshPermissions()
         reloadHistory()
         refreshRuntimeUIState()
+        syncIdleIndicator()
         runLaunchPermissionPromptIfNeeded()
     }
 
@@ -151,6 +154,7 @@ public final class AppRuntime: ObservableObject {
             updateIndicator(.hidden)
         } else {
             setupHotkeys()
+            syncIdleIndicator()
         }
         refreshRuntimeUIState()
         AppLogger.info("Service toggled: \(enabled ? "on" : "off")")
@@ -292,9 +296,7 @@ public final class AppRuntime: ObservableObject {
 
     public func setFloatingIndicatorEnabled(_ enabled: Bool) {
         config.floatingIndicatorEnabled = enabled
-        if !enabled {
-            updateIndicator(.hidden)
-        }
+        syncIdleIndicator()
         saveConfig()
     }
 
@@ -574,6 +576,14 @@ public final class AppRuntime: ObservableObject {
         indicator.update(state: state)
     }
 
+    private func syncIdleIndicator() {
+        if config.floatingIndicatorEnabled, serviceEnabled {
+            updateIndicator(.idle)
+        } else {
+            indicator.update(state: .hidden)
+        }
+    }
+
     private func startMeterUpdates() {
         stopMeterUpdates()
         meterTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { [weak self] _ in
@@ -603,6 +613,9 @@ public final class AppRuntime: ObservableObject {
         }
 
         do {
+            let target = frontmostDictationTarget()
+            activeDictationTargetAppName = target.name
+            activeDictationTargetPID = target.pid
             try audioService.startRecording()
             state = .recording
             updateIndicator(.recording(level: audioService.currentLiveLevel()))
@@ -628,7 +641,9 @@ public final class AppRuntime: ObservableObject {
             let audio = try audioService.stopRecording()
             if audio.isEmpty {
                 state = .idle
-                updateIndicator(.hidden)
+                activeDictationTargetAppName = nil
+                activeDictationTargetPID = nil
+                updateIndicator(.idle)
                 refreshRuntimeUIState()
                 AppLogger.info("Dictation stopped with empty audio.")
                 return
@@ -640,8 +655,8 @@ public final class AppRuntime: ObservableObject {
 
             let utterance = DictationUtterance(
                 audioSamples: audio,
-                sourceApp: frontmostAppName(),
-                sourcePID: frontmostPID()
+                sourceApp: activeDictationTargetAppName,
+                sourcePID: activeDictationTargetPID
             )
             Task {
                 do {
@@ -654,6 +669,8 @@ public final class AppRuntime: ObservableObject {
                         self.lastError = output.insert.errorMessage ?? ""
                         self.reloadHistory()
                         self.updateIndicator(output.insert.inserted ? .done("Done") : .error(output.insert.errorMessage ?? "Paste failed"))
+                        self.activeDictationTargetAppName = nil
+                        self.activeDictationTargetPID = nil
                         self.refreshRuntimeUIState()
                         AppLogger.info("Transcription completed. inserted=\(output.insert.inserted) provider=\(output.cleanup.rewriteProvider ?? "deterministic")")
                     }
@@ -662,6 +679,8 @@ public final class AppRuntime: ObservableObject {
                         self.state = .error
                         self.lastError = error.localizedDescription
                         self.updateIndicator(.error(self.lastError))
+                        self.activeDictationTargetAppName = nil
+                        self.activeDictationTargetPID = nil
                         self.refreshRuntimeUIState()
                         AppLogger.error("Transcription failed: \(error.localizedDescription)")
                     }
@@ -671,20 +690,29 @@ public final class AppRuntime: ObservableObject {
             state = .error
             lastError = error.localizedDescription
             updateIndicator(.error(lastError))
+            activeDictationTargetAppName = nil
+            activeDictationTargetPID = nil
             refreshRuntimeUIState()
             AppLogger.error("Failed to stop recording: \(error.localizedDescription)")
         }
     }
 
     private func frontmostAppName() -> String? {
-        NSWorkspace.shared.frontmostApplication?.localizedName
+        frontmostDictationTarget().name
     }
 
     private func frontmostPID() -> Int32? {
-        guard let pid = NSWorkspace.shared.frontmostApplication?.processIdentifier else {
-            return nil
+        frontmostDictationTarget().pid
+    }
+
+    private func frontmostDictationTarget() -> (name: String?, pid: Int32?) {
+        guard let app = NSWorkspace.shared.frontmostApplication else {
+            return (nil, nil)
         }
-        return pid
+        if app.bundleIdentifier == Bundle.main.bundleIdentifier {
+            return (nil, nil)
+        }
+        return (app.localizedName, app.processIdentifier)
     }
 
     deinit {

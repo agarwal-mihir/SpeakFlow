@@ -5,6 +5,7 @@ import Foundation
 public final class FloatingIndicatorController {
     public enum State {
         case hidden
+        case idle
         case recording(level: Float)
         case transcribing
         case done(String)
@@ -83,6 +84,9 @@ public final class FloatingIndicatorController {
         switch state {
         case .hidden:
             panel.orderOut(nil)
+        case .idle:
+            indicatorView.update(state: .idle)
+            show()
         case let .recording(level):
             indicatorView.update(state: .recording(level: level))
             show()
@@ -91,10 +95,10 @@ public final class FloatingIndicatorController {
             show()
         case let .done(message):
             indicatorView.update(state: .done(message))
-            showThenHide()
+            showThenIdle()
         case let .error(message):
             indicatorView.update(state: .error(message))
-            showThenHide()
+            showThenIdle()
         }
     }
 
@@ -102,10 +106,11 @@ public final class FloatingIndicatorController {
         panel.orderFrontRegardless()
     }
 
-    private func showThenHide() {
+    private func showThenIdle() {
         show()
         let task = DispatchWorkItem { [weak self] in
-            self?.panel.orderOut(nil)
+            self?.indicatorView.update(state: .idle)
+            self?.show()
         }
         hideTask = task
         DispatchQueue.main.asyncAfter(deadline: .now() + hideDelay, execute: task)
@@ -173,7 +178,7 @@ private final class DictationIndicatorView: NSView {
             return .systemGreen
         case .error:
             return .systemRed
-        case .hidden:
+        case .hidden, .idle:
             return .systemGray
         }
     }
