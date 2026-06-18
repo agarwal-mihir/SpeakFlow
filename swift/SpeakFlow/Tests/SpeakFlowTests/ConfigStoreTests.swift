@@ -17,7 +17,8 @@ struct ConfigStoreTests {
           "parakeet_model": "parakeet-unified-en-0.6b",
           "compute_backend": "gpu",
           "lmstudio_auto_start": false,
-          "lmstudio_start_timeout_ms": 12000
+          "lmstudio_start_timeout_ms": 12000,
+          "launch_permission_prompt_completed": true
         }
         """
         try seed.data(using: .utf8)?.write(to: path)
@@ -31,6 +32,7 @@ struct ConfigStoreTests {
         #expect(cfg.computeBackend == .gpu)
         #expect(cfg.lmstudioAutoStart == false)
         #expect(cfg.lmstudioStartTimeoutMs == 12000)
+        #expect(cfg.launchPermissionPromptCompleted)
         cfg.cleanupProvider = .deterministic
         cfg.transcriptionProvider = .whisperKit
         cfg.computeBackend = .cpu
@@ -46,5 +48,6 @@ struct ConfigStoreTests {
         #expect(obj?["compute_backend"] as? String == "cpu")
         #expect(obj?["lmstudio_auto_start"] as? Bool == false)
         #expect(obj?["lmstudio_start_timeout_ms"] as? Int == 12000)
+        #expect(obj?["launch_permission_prompt_completed"] as? Bool == true)
     }
 }

@@ -46,6 +46,7 @@ public final class JSONConfigStore: ConfigStoreProtocol {
         if let value = obj["floating_indicator_origin_y"] as? Double { cfg.floatingIndicatorOriginY = value }
         if let value = obj["paste_last_shortcut_enabled"] as? Bool { cfg.pasteLastShortcutEnabled = value }
         if let value = obj["paste_failure_keep_dictation_in_clipboard"] as? Bool { cfg.pasteFailureKeepDictationInClipboard = value }
+        if let value = obj["launch_permission_prompt_completed"] as? Bool { cfg.launchPermissionPromptCompleted = value }
 
         return cfg
     }
@@ -88,6 +89,7 @@ public final class JSONConfigStore: ConfigStoreProtocol {
         merged["floating_indicator_origin_y"] = config.floatingIndicatorOriginY
         merged["paste_last_shortcut_enabled"] = config.pasteLastShortcutEnabled
         merged["paste_failure_keep_dictation_in_clipboard"] = config.pasteFailureKeepDictationInClipboard
+        merged["launch_permission_prompt_completed"] = config.launchPermissionPromptCompleted
 
         let data = try JSONSerialization.data(withJSONObject: merged, options: [.prettyPrinted, .sortedKeys])
         let tmp = path.appendingPathExtension("tmp")

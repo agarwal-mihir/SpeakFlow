@@ -112,6 +112,10 @@ public final class AppRuntime: ObservableObject {
     }
 
     public func requestPermission(_ kind: PermissionKind) {
+        if !config.launchPermissionPromptCompleted {
+            config.launchPermissionPromptCompleted = true
+            saveConfig()
+        }
         switch kind {
         case .microphone:
             Task { @MainActor [weak self] in
@@ -403,7 +407,10 @@ public final class AppRuntime: ObservableObject {
     private func runLaunchPermissionPromptIfNeeded() {
         guard !permissionState.dictationReady else { return }
         guard !didRunLaunchPermissionPrompt else { return }
+        guard !config.launchPermissionPromptCompleted else { return }
         didRunLaunchPermissionPrompt = true
+        config.launchPermissionPromptCompleted = true
+        saveConfig()
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
             Task { @MainActor [weak self] in

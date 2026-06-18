@@ -145,6 +145,7 @@ public struct AppConfig: Codable, Equatable, Sendable {
     public var floatingIndicatorOriginY: Double?
     public var pasteLastShortcutEnabled: Bool = true
     public var pasteFailureKeepDictationInClipboard: Bool = true
+    public var launchPermissionPromptCompleted: Bool = false
 
     public init() {}
 }
