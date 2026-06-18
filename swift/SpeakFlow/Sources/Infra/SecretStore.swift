@@ -14,15 +14,7 @@ public final class KeychainSecretStore: SecretStoreProtocol {
         if let env = ProcessInfo.processInfo.environment["GROQ_API_KEY"], !env.isEmpty {
             return env
         }
-
-        let (status, out, _) = runSecurity([
-            "find-generic-password",
-            "-s", serviceName,
-            "-a", accountName,
-            "-w"
-        ])
-        guard status == 0 else { return nil }
-        return out.trimmingCharacters(in: .whitespacesAndNewlines)
+        return try getSecret(account: accountName)
     }
 
     public func hasGroqAPIKey() -> Bool {
@@ -30,6 +22,25 @@ public final class KeychainSecretStore: SecretStoreProtocol {
     }
 
     public func setGroqAPIKey(_ value: String) throws {
+        try setSecret(value, account: accountName)
+    }
+
+    public func deleteGroqAPIKey() throws {
+        try deleteSecret(account: accountName)
+    }
+
+    private func getSecret(account: String) throws -> String? {
+        let (status, out, _) = runSecurity([
+            "find-generic-password",
+            "-s", serviceName,
+            "-a", account,
+            "-w"
+        ])
+        guard status == 0 else { return nil }
+        return out.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private func setSecret(_ value: String, account: String) throws {
         let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else {
             throw SpeakFlowError.keychainFailure("API key cannot be empty")
@@ -38,16 +49,16 @@ public final class KeychainSecretStore: SecretStoreProtocol {
             "add-generic-password",
             "-U",
             "-s", serviceName,
-            "-a", accountName,
+            "-a", account,
             "-w", trimmed
         ])
     }
 
-    public func deleteGroqAPIKey() throws {
+    private func deleteSecret(account: String) throws {
         _ = try? runSecurityOrThrow([
             "delete-generic-password",
             "-s", serviceName,
-            "-a", accountName
+            "-a", account
         ])
     }
 

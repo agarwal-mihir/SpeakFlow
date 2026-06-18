@@ -18,6 +18,9 @@ public final class AppRuntime: ObservableObject {
     @Published public var config: AppConfig
     @Published public var audioLevel: Float = 0
     @Published public var parakeetRunnerStatus: ParakeetMLXRunnerStatus = ParakeetMLXRunner.status()
+    @Published public var groqModels: [RemoteModelOption] = AppRuntime.defaultGroqModels
+    @Published public var groqModelStatus = "Using built-in Groq model list"
+    @Published public var isLoadingGroqModels = false
 
     private let configStore: JSONConfigStore
     private let historyStore: SQLiteHistoryStore
@@ -59,7 +62,7 @@ public final class AppRuntime: ObservableObject {
         permissionService = PermissionService()
         hotkeyService = HotkeyService()
         audioService = AudioCaptureService()
-        sttService = Self.makeTranscriptionService(for: loadedConfig)
+        sttService = Self.makeTranscriptionService(for: loadedConfig, secretStore: secretStore)
         cleanupService = CleanupService(configProvider: { [weak configStore] in
             (try? configStore?.load()) ?? AppConfig()
         }, secretStore: secretStore)
@@ -202,6 +205,12 @@ public final class AppRuntime: ObservableObject {
         applyTranscriptionConfig()
     }
 
+    public func setGroqTranscriptionModel(_ model: GroqTranscriptionModel) {
+        config.groqTranscriptionModel = model
+        config.transcriptionProvider = .groqCloud
+        applyTranscriptionConfig()
+    }
+
     public func setComputeBackend(_ backend: ComputeBackend) {
         config.computeBackend = backend
         applyTranscriptionConfig()
@@ -229,6 +238,31 @@ public final class AppRuntime: ObservableObject {
 
     public func setLMStudioStartTimeoutMs(_ value: Int) {
         config.lmstudioStartTimeoutMs = min(max(value, 1000), 60000)
+        saveConfig()
+    }
+
+    public func setMLXEnabled(_ enabled: Bool) {
+        config.mlxEnabled = enabled
+        saveConfig()
+    }
+
+    public func setMLXBaseURL(_ value: String) {
+        config.mlxBaseURL = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        saveConfig()
+    }
+
+    public func setMLXModel(_ model: MLXTextModel) {
+        config.mlxModel = model
+        saveConfig()
+    }
+
+    public func setMLXAutoStart(_ enabled: Bool) {
+        config.mlxAutoStart = enabled
+        saveConfig()
+    }
+
+    public func setMLXStartTimeoutMs(_ value: Int) {
+        config.mlxStartTimeoutMs = min(max(value, 1000), 120000)
         saveConfig()
     }
 
@@ -294,6 +328,42 @@ public final class AppRuntime: ObservableObject {
 
     public func refreshModelStatus() {
         parakeetRunnerStatus = ParakeetMLXRunner.status()
+        Task { await refreshGroqModels() }
+    }
+
+    public func refreshGroqModels() async {
+        guard !isLoadingGroqModels else { return }
+        isLoadingGroqModels = true
+        defer { isLoadingGroqModels = false }
+
+        guard let key = try? secretStore.getGroqAPIKey(), !key.isEmpty else {
+            groqModels = Self.defaultGroqModels
+            groqModelStatus = "Add a Groq API key to load account models"
+            return
+        }
+        guard let url = URL(string: "\(config.groqBaseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/")))/models") else {
+            groqModels = Self.defaultGroqModels
+            groqModelStatus = "Invalid Groq URL"
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 10
+        request.setValue("Bearer \(key)", forHTTPHeaderField: "Authorization")
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
+                groqModels = Self.defaultGroqModels
+                groqModelStatus = "Could not load Groq models; using built-in list"
+                return
+            }
+            let models = Self.parseGroqModels(data: data)
+            groqModels = models.isEmpty ? Self.defaultGroqModels : models
+            groqModelStatus = models.isEmpty ? "Groq returned no models; using built-in list" : "Loaded \(models.count) Groq models"
+        } catch {
+            groqModels = Self.defaultGroqModels
+            groqModelStatus = "Could not load Groq models; using built-in list"
+        }
     }
 
     public func installAutostart() {
@@ -324,16 +394,16 @@ public final class AppRuntime: ObservableObject {
     }
 
     private func applyTranscriptionConfig() {
-        sttService = Self.makeTranscriptionService(for: config)
+        sttService = Self.makeTranscriptionService(for: config, secretStore: secretStore)
         let service = sttService
         Task {
             await pipeline.setTranscriptionService(service)
         }
         saveConfig()
-        AppLogger.info("Transcription config updated: provider=\(config.transcriptionProvider.rawValue) whisper=\(config.whisperModel.rawValue) parakeet=\(config.parakeetModel.rawValue) compute=\(config.computeBackend.rawValue)")
+        AppLogger.info("Transcription config updated: provider=\(config.transcriptionProvider.rawValue) whisper=\(config.whisperModel.rawValue) parakeet=\(config.parakeetModel.rawValue) groq=\(config.groqTranscriptionModel.rawValue) compute=\(config.computeBackend.rawValue)")
     }
 
-    private static func makeTranscriptionService(for config: AppConfig) -> SpeechTranscriptionServiceProtocol {
+    private static func makeTranscriptionService(for config: AppConfig, secretStore: KeychainSecretStore) -> SpeechTranscriptionServiceProtocol {
         switch config.transcriptionProvider {
         case .whisperKit:
             return WhisperKitTranscriptionService(
@@ -345,7 +415,62 @@ public final class AppRuntime: ObservableObject {
                 model: config.parakeetModel,
                 computeBackend: config.computeBackend
             )
+        case .appleSpeech:
+            return AppleSpeechTranscriptionService(languageMode: config.languageMode)
+        case .groqCloud:
+            return GroqTranscriptionService(
+                baseURL: config.groqBaseURL,
+                model: config.groqTranscriptionModel,
+                languageMode: config.languageMode,
+                apiKeyProvider: { try secretStore.getGroqAPIKey() }
+            )
         }
+    }
+
+    private static let defaultGroqModels: [RemoteModelOption] = [
+        RemoteModelOption(id: "meta-llama/llama-4-maverick-17b-128e-instruct", title: "Llama 4 Maverick", detail: "General cleanup"),
+        RemoteModelOption(id: "meta-llama/llama-4-scout-17b-16e-instruct", title: "Llama 4 Scout", detail: "Fast multimodal"),
+        RemoteModelOption(id: "llama-3.3-70b-versatile", title: "Llama 3.3 70B", detail: "Versatile text"),
+        RemoteModelOption(id: "llama-3.1-8b-instant", title: "Llama 3.1 8B Instant", detail: "Low latency"),
+        RemoteModelOption(id: "qwen/qwen3-32b", title: "Qwen3 32B", detail: "Reasoning capable"),
+        RemoteModelOption(id: "openai/gpt-oss-120b", title: "GPT-OSS 120B", detail: "Open model"),
+        RemoteModelOption(id: "openai/gpt-oss-20b", title: "GPT-OSS 20B", detail: "Fast open model"),
+        RemoteModelOption(id: "groq/compound", title: "Compound", detail: "Groq compound system"),
+        RemoteModelOption(id: "groq/compound-mini", title: "Compound Mini", detail: "Lower latency compound"),
+    ]
+
+    private static func parseGroqModels(data: Data) -> [RemoteModelOption] {
+        guard
+            let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+            let dataList = json["data"] as? [[String: Any]]
+        else {
+            return []
+        }
+        return dataList.compactMap { item in
+            guard let id = item["id"] as? String else { return nil }
+            return RemoteModelOption(
+                id: id,
+                title: modelTitle(from: id),
+                detail: modelDetail(from: item)
+            )
+        }
+        .filter { !$0.id.hasPrefix("whisper-") }
+        .sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
+    }
+
+    private static func modelTitle(from id: String) -> String {
+        id.split(separator: "/").last.map(String.init)?
+            .replacingOccurrences(of: "-", with: " ")
+            .split(separator: " ")
+            .map { $0.uppercased().hasPrefix("GPT") ? String($0).uppercased() : $0.capitalized }
+            .joined(separator: " ") ?? id
+    }
+
+    private static func modelDetail(from item: [String: Any]) -> String {
+        if let ownedBy = item["owned_by"] as? String, !ownedBy.isEmpty {
+            return ownedBy
+        }
+        return "Groq model"
     }
 
     private func stopRecordingIfNeeded(discardAudio: Bool) {

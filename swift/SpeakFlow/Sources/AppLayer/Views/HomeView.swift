@@ -55,6 +55,8 @@ struct HomeView: View {
         switch runtime.config.transcriptionProvider {
         case .whisperKit: return runtime.config.whisperModel.title
         case .parakeetMLX: return runtime.config.parakeetModel.title
+        case .appleSpeech: return "Apple Speech"
+        case .groqCloud: return runtime.config.groqTranscriptionModel.title
         }
     }
 
@@ -95,7 +97,7 @@ struct HomeView: View {
                 StatusChip(
                     title: "Model",
                     value: activeModelLabel,
-                    icon: runtime.config.transcriptionProvider == .parakeetMLX ? "bolt.fill" : "waveform.badge.magnifyingglass",
+                    icon: runtime.config.transcriptionProvider.systemImage,
                     tint: runtime.config.transcriptionProvider == .parakeetMLX ? .orange : .blue
                 )
                 StatusChip(

@@ -31,12 +31,18 @@ public final class JSONConfigStore: ConfigStoreProtocol {
         if let raw = obj["transcription_provider"] as? String, let provider = TranscriptionProvider(rawValue: raw) { cfg.transcriptionProvider = provider }
         if let raw = obj["whisper_model"] as? String, let model = WhisperModel(rawValue: raw) { cfg.whisperModel = model }
         if let raw = obj["parakeet_model"] as? String, let model = ParakeetModel(rawValue: raw) { cfg.parakeetModel = model }
+        if let raw = obj["groq_transcription_model"] as? String, let model = GroqTranscriptionModel(rawValue: raw) { cfg.groqTranscriptionModel = model }
         if let raw = obj["compute_backend"] as? String, let backend = ComputeBackend(rawValue: raw) { cfg.computeBackend = backend }
         if let value = obj["lmstudio_enabled"] as? Bool { cfg.lmstudioEnabled = value }
         if let value = obj["lmstudio_base_url"] as? String { cfg.lmstudioBaseURL = value }
         if let value = obj["lmstudio_auto_start"] as? Bool { cfg.lmstudioAutoStart = value }
         if let value = obj["lmstudio_start_timeout_ms"] as? Int { cfg.lmstudioStartTimeoutMs = min(max(1000, value), 60000) }
         if let raw = obj["cleanup_provider"] as? String, let mode = CleanupProvider(rawValue: raw) { cfg.cleanupProvider = mode }
+        if let value = obj["mlx_enabled"] as? Bool { cfg.mlxEnabled = value }
+        if let value = obj["mlx_base_url"] as? String { cfg.mlxBaseURL = value }
+        if let raw = obj["mlx_model"] as? String, let model = MLXTextModel(rawValue: raw) { cfg.mlxModel = model }
+        if let value = obj["mlx_auto_start"] as? Bool { cfg.mlxAutoStart = value }
+        if let value = obj["mlx_start_timeout_ms"] as? Int { cfg.mlxStartTimeoutMs = min(max(1000, value), 120000) }
         if let value = obj["groq_base_url"] as? String { cfg.groqBaseURL = value }
         if let value = obj["groq_model"] as? String { cfg.groqModel = value }
         if let value = obj["max_cleanup_timeout_ms"] as? Int { cfg.maxCleanupTimeoutMs = max(200, value) }
@@ -74,12 +80,18 @@ public final class JSONConfigStore: ConfigStoreProtocol {
         merged["transcription_provider"] = config.transcriptionProvider.rawValue
         merged["whisper_model"] = config.whisperModel.rawValue
         merged["parakeet_model"] = config.parakeetModel.rawValue
+        merged["groq_transcription_model"] = config.groqTranscriptionModel.rawValue
         merged["compute_backend"] = config.computeBackend.rawValue
         merged["lmstudio_enabled"] = config.lmstudioEnabled
         merged["lmstudio_base_url"] = config.lmstudioBaseURL
         merged["lmstudio_auto_start"] = config.lmstudioAutoStart
         merged["lmstudio_start_timeout_ms"] = config.lmstudioStartTimeoutMs
         merged["cleanup_provider"] = config.cleanupProvider.rawValue
+        merged["mlx_enabled"] = config.mlxEnabled
+        merged["mlx_base_url"] = config.mlxBaseURL
+        merged["mlx_model"] = config.mlxModel.rawValue
+        merged["mlx_auto_start"] = config.mlxAutoStart
+        merged["mlx_start_timeout_ms"] = config.mlxStartTimeoutMs
         merged["groq_base_url"] = config.groqBaseURL
         merged["groq_model"] = config.groqModel
         merged["max_cleanup_timeout_ms"] = config.maxCleanupTimeoutMs

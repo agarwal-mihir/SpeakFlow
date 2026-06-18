@@ -19,11 +19,15 @@ public enum CleanupProvider: String, Codable, CaseIterable, Sendable {
 public enum TranscriptionProvider: String, Codable, CaseIterable, Sendable {
     case whisperKit = "whisperkit"
     case parakeetMLX = "parakeet_mlx"
+    case appleSpeech = "apple_speech"
+    case groqCloud = "groq_cloud"
 
     public var title: String {
         switch self {
         case .whisperKit: return "WhisperKit"
         case .parakeetMLX: return "NVIDIA Parakeet"
+        case .appleSpeech: return "Apple Dictation"
+        case .groqCloud: return "Groq"
         }
     }
 
@@ -31,6 +35,17 @@ public enum TranscriptionProvider: String, Codable, CaseIterable, Sendable {
         switch self {
         case .whisperKit: return "Core ML Whisper models"
         case .parakeetMLX: return "MLX Parakeet ASR"
+        case .appleSpeech: return "macOS Speech recognizer"
+        case .groqCloud: return "GroqCloud Whisper STT"
+        }
+    }
+
+    public var systemImage: String {
+        switch self {
+        case .whisperKit: return "waveform.badge.magnifyingglass"
+        case .parakeetMLX: return "bolt.fill"
+        case .appleSpeech: return "apple.logo"
+        case .groqCloud: return "cloud.fill"
         }
     }
 }
@@ -117,6 +132,78 @@ public enum ParakeetModel: String, Codable, CaseIterable, Sendable {
     }
 }
 
+public enum GroqTranscriptionModel: String, Codable, CaseIterable, Sendable {
+    case whisperLargeV3Turbo = "whisper-large-v3-turbo"
+    case whisperLargeV3 = "whisper-large-v3"
+
+    public var title: String {
+        switch self {
+        case .whisperLargeV3Turbo: return "Whisper Large v3 Turbo"
+        case .whisperLargeV3: return "Whisper Large v3"
+        }
+    }
+
+    public var detail: String {
+        switch self {
+        case .whisperLargeV3Turbo: return "Fast multilingual transcription"
+        case .whisperLargeV3: return "Highest accuracy multilingual transcription"
+        }
+    }
+
+    public var priceLabel: String {
+        switch self {
+        case .whisperLargeV3Turbo: return "$0.04/hr"
+        case .whisperLargeV3: return "$0.111/hr"
+        }
+    }
+}
+
+public enum MLXTextModel: String, Codable, CaseIterable, Sendable {
+    case qwen3_4B = "mlx-community/Qwen3-4B-4bit"
+    case llama32_3B = "mlx-community/Llama-3.2-3B-Instruct-4bit"
+    case gemma3_1B = "mlx-community/gemma-3-1b-it-4bit"
+    case gemma3_4B = "mlx-community/gemma-3-text-4b-it-4bit"
+
+    public var title: String {
+        switch self {
+        case .qwen3_4B: return "Qwen3 4B"
+        case .llama32_3B: return "Llama 3.2 3B"
+        case .gemma3_1B: return "Gemma 3 1B"
+        case .gemma3_4B: return "Gemma 3 4B"
+        }
+    }
+
+    public var detail: String {
+        switch self {
+        case .qwen3_4B: return "Balanced MLX cleanup model"
+        case .llama32_3B: return "Small instruction model"
+        case .gemma3_1B: return "Fastest local cleanup"
+        case .gemma3_4B: return "Better local cleanup quality"
+        }
+    }
+
+    public var sizeLabel: String {
+        switch self {
+        case .qwen3_4B: return "~2.5 GB"
+        case .llama32_3B: return "~2 GB"
+        case .gemma3_1B: return "~0.8 GB"
+        case .gemma3_4B: return "~2.5 GB"
+        }
+    }
+}
+
+public struct RemoteModelOption: Identifiable, Equatable, Sendable {
+    public var id: String
+    public var title: String
+    public var detail: String
+
+    public init(id: String, title: String, detail: String) {
+        self.id = id
+        self.title = title
+        self.detail = detail
+    }
+}
+
 public enum ServiceState: String, Sendable {
     case idle = "Idle"
     case recording = "Recording"
@@ -130,12 +217,18 @@ public struct AppConfig: Codable, Equatable, Sendable {
     public var transcriptionProvider: TranscriptionProvider = .whisperKit
     public var whisperModel: WhisperModel = .largeV3
     public var parakeetModel: ParakeetModel = .tdt06BV3
+    public var groqTranscriptionModel: GroqTranscriptionModel = .whisperLargeV3Turbo
     public var computeBackend: ComputeBackend = .automatic
     public var lmstudioEnabled: Bool = true
     public var lmstudioBaseURL: String = "http://127.0.0.1:1234/v1"
     public var lmstudioAutoStart: Bool = true
     public var lmstudioStartTimeoutMs: Int = 8000
     public var cleanupProvider: CleanupProvider = .priority
+    public var mlxEnabled: Bool = false
+    public var mlxBaseURL: String = "http://127.0.0.1:8080/v1"
+    public var mlxModel: MLXTextModel = .gemma3_1B
+    public var mlxAutoStart: Bool = true
+    public var mlxStartTimeoutMs: Int = 30000
     public var groqBaseURL: String = "https://api.groq.com/openai/v1"
     public var groqModel: String = "meta-llama/llama-4-maverick-17b-128e-instruct"
     public var maxCleanupTimeoutMs: Int = 1000

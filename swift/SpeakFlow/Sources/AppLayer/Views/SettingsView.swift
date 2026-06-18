@@ -4,6 +4,7 @@ import SwiftUI
 struct SettingsView: View {
     @ObservedObject var runtime: AppRuntime
     @State private var lmstudioBaseURL = ""
+    @State private var mlxBaseURL = ""
     @State private var groqBaseURL = ""
     @State private var groqModel = ""
     @State private var groqKey = ""
@@ -178,7 +179,7 @@ struct SettingsView: View {
             Label("Speech-to-text engine", systemImage: "waveform")
                 .font(.title3.bold())
 
-            HStack(spacing: 10) {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 220), spacing: 10)], alignment: .leading, spacing: 10) {
                 ForEach(TranscriptionProvider.allCases, id: \.self) { provider in
                     providerButton(provider)
                 }
@@ -192,7 +193,7 @@ struct SettingsView: View {
             runtime.setTranscriptionProvider(provider)
         } label: {
             HStack(spacing: 10) {
-                Image(systemName: provider == .parakeetMLX ? "bolt.fill" : "waveform.badge.magnifyingglass")
+                Image(systemName: provider.systemImage)
                     .foregroundStyle(runtime.config.transcriptionProvider == provider ? .blue : .secondary)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(provider.title)
@@ -286,6 +287,42 @@ struct SettingsView: View {
 
                 parakeetRunnerStatus
             }
+        case .appleSpeech:
+            modelList(
+                title: "Apple Dictation",
+                subtitle: "Uses Apple's built-in Speech Recognition service for the selected language mode.",
+                models: [
+                    ModelOption(
+                        id: "apple-speech",
+                        title: "Apple Speech Recognition",
+                        detail: "Built into macOS",
+                        size: "System",
+                        selected: true,
+                        recommended: false,
+                        action: { runtime.setTranscriptionProvider(.appleSpeech) }
+                    )
+                ]
+            )
+        case .groqCloud:
+            VStack(alignment: .leading, spacing: 12) {
+                modelList(
+                    title: "Groq transcription models",
+                    subtitle: "Cloud transcription through Groq's OpenAI-compatible audio API.",
+                    models: GroqTranscriptionModel.allCases.map { model in
+                        ModelOption(
+                            id: model.rawValue,
+                            title: model.title,
+                            detail: model.detail,
+                            size: model.priceLabel,
+                            selected: runtime.config.groqTranscriptionModel == model,
+                            recommended: model == .whisperLargeV3Turbo,
+                            action: { runtime.setGroqTranscriptionModel(model) }
+                        )
+                    }
+                )
+
+                groqKeyStatus
+            }
         }
     }
 
@@ -366,10 +403,26 @@ struct SettingsView: View {
                 get: { runtime.config.cleanupProvider },
                 set: { runtime.setCleanupProvider($0) }
             )) {
-                Text("Groq -> LM Studio -> Deterministic").tag(CleanupProvider.priority)
+                Text("MLX -> Groq -> LM Studio -> Deterministic").tag(CleanupProvider.priority)
                 Text("Deterministic only").tag(CleanupProvider.deterministic)
             }
             .pickerStyle(.segmented)
+
+            Toggle("Enable local MLX cleanup", isOn: Binding(
+                get: { runtime.config.mlxEnabled },
+                set: { runtime.setMLXEnabled($0) }
+            ))
+            Toggle("Auto-start MLX server if unavailable", isOn: Binding(
+                get: { runtime.config.mlxAutoStart },
+                set: { runtime.setMLXAutoStart($0) }
+            ))
+            settingsField(
+                label: "MLX URL",
+                placeholder: "http://127.0.0.1:8080/v1",
+                text: $mlxBaseURL,
+                onApply: { runtime.setMLXBaseURL(mlxBaseURL) }
+            )
+            mlxModelPicker
 
             Toggle("Enable LM Studio fallback", isOn: Binding(
                 get: { runtime.config.lmstudioEnabled },
@@ -399,6 +452,8 @@ struct SettingsView: View {
                 onApply: { runtime.setGroqModel(groqModel) }
             )
 
+            groqModelPicker
+
             SecureField(runtime.hasGroqAPIKey() ? "Saved in Keychain" : "Groq API key", text: $groqKey)
                 .textFieldStyle(.roundedBorder)
 
@@ -423,6 +478,111 @@ struct SettingsView: View {
         .glassCard()
     }
 
+    private var groqModelPicker: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Label("Groq models", systemImage: "list.bullet.rectangle")
+                    .font(.subheadline.weight(.semibold))
+                Spacer()
+                Text(runtime.groqModelStatus)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Button {
+                    Task { await runtime.refreshGroqModels() }
+                } label: {
+                    Label(runtime.isLoadingGroqModels ? "Loading" : "Refresh", systemImage: "arrow.clockwise")
+                }
+                .buttonStyle(.bordered)
+                .disabled(runtime.isLoadingGroqModels)
+            }
+
+            VStack(spacing: 8) {
+                ForEach(runtime.groqModels) { model in
+                    Button {
+                        groqModel = model.id
+                        runtime.setGroqModel(model.id)
+                    } label: {
+                        HStack(spacing: 10) {
+                            Circle()
+                                .fill(runtime.config.groqModel == model.id ? Color.green : Color.secondary.opacity(0.25))
+                                .frame(width: 8, height: 8)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(model.title)
+                                    .font(.subheadline.weight(.semibold))
+                                Text(model.id)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Text(model.detail)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            if runtime.config.groqModel == model.id {
+                                Text("Active")
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(.blue)
+                            }
+                        }
+                        .padding(12)
+                        .macPanel(cornerRadius: 8)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+    }
+
+    private var mlxModelPicker: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Local MLX models", systemImage: "memorychip")
+                .font(.subheadline.weight(.semibold))
+
+            VStack(spacing: 8) {
+                ForEach(MLXTextModel.allCases, id: \.self) { model in
+                    Button {
+                        runtime.setMLXModel(model)
+                    } label: {
+                        HStack(spacing: 10) {
+                            Circle()
+                                .fill(runtime.config.mlxModel == model ? Color.green : Color.secondary.opacity(0.25))
+                                .frame(width: 8, height: 8)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(model.title)
+                                    .font(.subheadline.weight(.semibold))
+                                Text(model.rawValue)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Text(model.sizeLabel)
+                                .font(.caption.monospacedDigit())
+                                .foregroundStyle(.secondary)
+                            if runtime.config.mlxModel == model {
+                                Text("Active")
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(.blue)
+                            }
+                        }
+                        .padding(12)
+                        .macPanel(cornerRadius: 8)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+    }
+
+    private var groqKeyStatus: some View {
+        HStack(spacing: 8) {
+            Image(systemName: runtime.hasGroqAPIKey() ? "checkmark.circle.fill" : "key.fill")
+                .foregroundStyle(runtime.hasGroqAPIKey() ? .green : .orange)
+            Text(runtime.hasGroqAPIKey() ? "Groq API key saved" : "Save a Groq API key in Text cleanup before using Groq transcription.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .padding(.horizontal, 2)
+    }
+
     private func settingsField(
         label: String,
         placeholder: String,
@@ -444,6 +604,7 @@ struct SettingsView: View {
 
     private func refreshDraft() {
         lmstudioBaseURL = runtime.config.lmstudioBaseURL
+        mlxBaseURL = runtime.config.mlxBaseURL
         groqBaseURL = runtime.config.groqBaseURL
         groqModel = runtime.config.groqModel
     }

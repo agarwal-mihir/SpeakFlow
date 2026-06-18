@@ -5,6 +5,7 @@ public final class CleanupService: CleanupServiceProtocol, @unchecked Sendable {
     private let configProvider: @Sendable () -> AppConfig
     private let secretStore: SecretStoreProtocol
     private let session: URLSession
+    private nonisolated(unsafe) var mlxProcess: Process?
 
     public init(
         configProvider: @escaping @Sendable () -> AppConfig,
@@ -32,7 +33,11 @@ public final class CleanupService: CleanupServiceProtocol, @unchecked Sendable {
             return CleanupResult(text: deterministic, outputMode: mode, rewriteProvider: nil)
         }
 
-        var providers = ["groq"]
+        var providers: [String] = []
+        if config.mlxEnabled {
+            providers.append("mlx")
+        }
+        providers.append("groq")
         if config.lmstudioEnabled {
             providers.append("lmstudio")
         }
@@ -57,6 +62,19 @@ public final class CleanupService: CleanupServiceProtocol, @unchecked Sendable {
 
     private func rewrite(provider: String, text: String, mode: String, config: AppConfig) async -> String? {
         switch provider {
+        case "mlx":
+            if config.mlxAutoStart {
+                await ensureMLXServer(config: config)
+            }
+            return await callOpenAICompatible(
+                baseURL: config.mlxBaseURL,
+                model: config.mlxModel.rawValue,
+                timeoutMs: config.maxCleanupTimeoutMs,
+                apiKey: nil,
+                text: text,
+                mode: mode,
+                autoStartLMStudio: false
+            )
         case "groq":
             guard let key = try? secretStore.getGroqAPIKey(), !key.isEmpty else {
                 return nil
@@ -84,6 +102,66 @@ public final class CleanupService: CleanupServiceProtocol, @unchecked Sendable {
         default:
             return nil
         }
+    }
+
+    private func ensureMLXServer(config: AppConfig) async {
+        if await fetchFirstModel(baseURL: config.mlxBaseURL, timeoutMs: min(config.maxCleanupTimeoutMs, 1000)) != nil {
+            return
+        }
+        if mlxProcess?.isRunning == true {
+            await waitForModelServer(
+                baseURL: config.mlxBaseURL,
+                timeoutMs: config.mlxStartTimeoutMs,
+                probeTimeoutMs: min(config.maxCleanupTimeoutMs, 1000)
+            )
+            return
+        }
+
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+        process.arguments = [
+            "mlx_lm.server",
+            "--model", config.mlxModel.rawValue,
+            "--host", mlxHost(from: config.mlxBaseURL),
+            "--port", mlxPort(from: config.mlxBaseURL),
+        ]
+        process.standardOutput = Pipe()
+        process.standardError = Pipe()
+        do {
+            try process.run()
+            mlxProcess = process
+            AppLogger.info("Started MLX cleanup server for \(config.mlxModel.rawValue).")
+        } catch {
+            AppLogger.error("Failed to start MLX cleanup server: \(error.localizedDescription)")
+            return
+        }
+
+        await waitForModelServer(
+            baseURL: config.mlxBaseURL,
+            timeoutMs: config.mlxStartTimeoutMs,
+            probeTimeoutMs: min(config.maxCleanupTimeoutMs, 1000)
+        )
+    }
+
+    private func waitForModelServer(baseURL: String, timeoutMs: Int, probeTimeoutMs: Int) async {
+        let start = Date()
+        while Date().timeIntervalSince(start) * 1000 < Double(timeoutMs) {
+            if await fetchFirstModel(baseURL: baseURL, timeoutMs: probeTimeoutMs) != nil {
+                return
+            }
+            try? await Task.sleep(nanoseconds: 500_000_000)
+        }
+    }
+
+    private func mlxHost(from baseURL: String) -> String {
+        URL(string: baseURL)?.host ?? "127.0.0.1"
+    }
+
+    private func mlxPort(from baseURL: String) -> String {
+        if let port = URL(string: baseURL)?.port {
+            return String(port)
+        }
+        return "8080"
     }
 
     private func callOpenAICompatible(
