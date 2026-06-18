@@ -3,11 +3,11 @@ import SwiftUI
 
 struct SettingsView: View {
     @ObservedObject var runtime: AppRuntime
-    @State private var lmstudioBaseURL = ""
     @State private var mlxBaseURL = ""
     @State private var groqBaseURL = ""
     @State private var groqModel = ""
     @State private var groqKey = ""
+    @State private var cleanupSystemPrompt = ""
 
     var body: some View {
         ScrollView {
@@ -399,46 +399,26 @@ struct SettingsView: View {
             Label("Text cleanup", systemImage: "wand.and.stars")
                 .font(.title3.bold())
 
-            Picker("Provider chain", selection: Binding(
+            Picker("Cleanup engine", selection: Binding(
                 get: { runtime.config.cleanupProvider },
                 set: { runtime.setCleanupProvider($0) }
             )) {
-                Text("MLX -> Groq -> LM Studio -> Deterministic").tag(CleanupProvider.priority)
-                Text("Deterministic only").tag(CleanupProvider.deterministic)
+                ForEach(CleanupProvider.allCases, id: \.self) { provider in
+                    Text(provider.title).tag(provider)
+                }
             }
             .pickerStyle(.segmented)
 
-            Toggle("Enable local MLX cleanup", isOn: Binding(
-                get: { runtime.config.mlxEnabled },
-                set: { runtime.setMLXEnabled($0) }
-            ))
-            Toggle("Auto-start MLX server if unavailable", isOn: Binding(
-                get: { runtime.config.mlxAutoStart },
-                set: { runtime.setMLXAutoStart($0) }
-            ))
-            settingsField(
-                label: "MLX URL",
-                placeholder: "http://127.0.0.1:8080/v1",
-                text: $mlxBaseURL,
-                onApply: { runtime.setMLXBaseURL(mlxBaseURL) }
-            )
-            mlxModelPicker
+            cleanupEngineDetails
+            cleanupPromptEditor
+        }
+        .glassCard()
+    }
 
-            Toggle("Enable LM Studio fallback", isOn: Binding(
-                get: { runtime.config.lmstudioEnabled },
-                set: { runtime.setLMStudioEnabled($0) }
-            ))
-            Toggle("Auto-start LM Studio if unavailable", isOn: Binding(
-                get: { runtime.config.lmstudioAutoStart },
-                set: { runtime.setLMStudioAutoStart($0) }
-            ))
-
-            settingsField(
-                label: "LM Studio URL",
-                placeholder: "http://127.0.0.1:1234/v1",
-                text: $lmstudioBaseURL,
-                onApply: { runtime.setLMStudioBaseURL(lmstudioBaseURL) }
-            )
+    @ViewBuilder
+    private var cleanupEngineDetails: some View {
+        switch runtime.config.cleanupProvider {
+        case .groqCloud:
             settingsField(
                 label: "Groq URL",
                 placeholder: "https://api.groq.com/openai/v1",
@@ -453,7 +433,28 @@ struct SettingsView: View {
             )
 
             groqModelPicker
+            groqKeyEditor
+        case .mlxLocal:
+            Toggle("Auto-start MLX server if unavailable", isOn: Binding(
+                get: { runtime.config.mlxAutoStart },
+                set: { runtime.setMLXAutoStart($0) }
+            ))
+            settingsField(
+                label: "MLX URL",
+                placeholder: "http://127.0.0.1:8080/v1",
+                text: $mlxBaseURL,
+                onApply: { runtime.setMLXBaseURL(mlxBaseURL) }
+            )
+            mlxModelPicker
+        case .deterministic:
+            Label("AI cleanup is disabled. SpeakFlow will only normalize spacing, punctuation, and capitalization locally.", systemImage: "text.badge.checkmark")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+    }
 
+    private var groqKeyEditor: some View {
+        VStack(alignment: .leading, spacing: 8) {
             SecureField(runtime.hasGroqAPIKey() ? "Saved in Keychain" : "Groq API key", text: $groqKey)
                 .textFieldStyle(.roundedBorder)
 
@@ -475,7 +476,35 @@ struct SettingsView: View {
                 .buttonStyle(.bordered)
             }
         }
-        .glassCard()
+    }
+
+    private var cleanupPromptEditor: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Label("System prompt", systemImage: "text.quote")
+                    .font(.subheadline.weight(.semibold))
+                Spacer()
+                Button {
+                    runtime.resetCleanupSystemPrompt()
+                    cleanupSystemPrompt = runtime.config.cleanupSystemPrompt
+                } label: {
+                    Label("Reset", systemImage: "arrow.counterclockwise")
+                }
+                .buttonStyle(.bordered)
+                Button {
+                    runtime.setCleanupSystemPrompt(cleanupSystemPrompt)
+                } label: {
+                    Label("Apply", systemImage: "checkmark")
+                }
+                .buttonStyle(.borderedProminent)
+            }
+
+            TextEditor(text: $cleanupSystemPrompt)
+                .font(.system(.caption, design: .monospaced))
+                .frame(minHeight: 180)
+                .padding(8)
+                .macPanel(cornerRadius: 8)
+        }
     }
 
     private var groqModelPicker: some View {
@@ -603,10 +632,10 @@ struct SettingsView: View {
     }
 
     private func refreshDraft() {
-        lmstudioBaseURL = runtime.config.lmstudioBaseURL
         mlxBaseURL = runtime.config.mlxBaseURL
         groqBaseURL = runtime.config.groqBaseURL
         groqModel = runtime.config.groqModel
+        cleanupSystemPrompt = runtime.config.cleanupSystemPrompt
     }
 }
 

@@ -60,6 +60,7 @@
 		D8B31DF144753585C4880BFA /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 838671D00D6D40B1933D2AEE /* Domain.framework */; };
 		D8E7335CB1A7CF7E270C3105 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 838671D00D6D40B1933D2AEE /* Domain.framework */; };
 		D908507DDD1AF88178FC110D /* Infra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32BF80FB62B783F515E1B1F9 /* Infra.framework */; };
+		DDF714735D1E99C481801B44 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A02AC073D46AD85A8ABE8AA /* Assets.xcassets */; };
 		EF2988910905887B53024CB5 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C15AE916AED903FFA6896F /* RootView.swift */; };
 		F2BF3CFF2099F4561577B9F3 /* Infra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32BF80FB62B783F515E1B1F9 /* Infra.framework */; };
 		F6B885F32D6EF662307B3038 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49F28F28F9E3628903604 /* HistoryView.swift */; };
@@ -219,6 +220,7 @@
 		838671D00D6D40B1933D2AEE /* Domain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Domain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8711ED80641EF03285776B31 /* CleanupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupService.swift; sourceTree = "<group>"; };
 		88756923B22716A20265DD7D /* PipelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipelineTests.swift; sourceTree = "<group>"; };
+		8A02AC073D46AD85A8ABE8AA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8E6C69F423AB92C05DA4CEBE /* PermissionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsView.swift; sourceTree = "<group>"; };
 		969A363F851C0F0D6C86A64A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		99E3BD6E803AD1FB9B73BE36 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
@@ -351,6 +353,14 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
+		5DAE0C4526F3A45F610F3B2E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8A02AC073D46AD85A8ABE8AA /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		6023B60878D6FA853F351A78 /* AppLayer */ = {
 			isa = PBXGroup;
 			children = (
@@ -365,6 +375,7 @@
 		68E747C0D888C639B1144F18 = {
 			isa = PBXGroup;
 			children = (
+				5DAE0C4526F3A45F610F3B2E /* Resources */,
 				3DCAC54ECF5A55BD698580D8 /* Sources */,
 				C54B6B8CF4CEAF532A698FAE /* Tests */,
 				AEA00197CDC0F8A2CA56CD4B /* Products */,
@@ -535,6 +546,7 @@
 			buildConfigurationList = F9620526C7EC942FDA694D83 /* Build configuration list for PBXNativeTarget "SpeakFlow" */;
 			buildPhases = (
 				1648BEEC56BB9DC1A61BD344 /* Sources */,
+				6401DD5549519039131789E3 /* Resources */,
 				AE4C064DFEACB9FCC65BE7E3 /* Frameworks */,
 				E307255C8B1CDEE7B67B27B4 /* Embed Frameworks */,
 			);
@@ -590,6 +602,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6401DD5549519039131789E3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DDF714735D1E99C481801B44 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		13A61BC9F5E1B1409265064D /* Sources */ = {
@@ -769,7 +792,7 @@
 		33DE9BDAE52EE073BB56B11C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = "Config/SpeakFlow-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1061,7 +1084,7 @@
 		F7FC88FCD0F6BED7EDE2619E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = "Config/SpeakFlow-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (

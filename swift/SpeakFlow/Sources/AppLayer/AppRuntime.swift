@@ -218,6 +218,20 @@ public final class AppRuntime: ObservableObject {
 
     public func setCleanupProvider(_ provider: CleanupProvider) {
         config.cleanupProvider = provider
+        if provider == .mlxLocal {
+            config.mlxEnabled = true
+        }
+        saveConfig()
+    }
+
+    public func setCleanupSystemPrompt(_ value: String) {
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        config.cleanupSystemPrompt = trimmed.isEmpty ? AppConfig.defaultCleanupSystemPrompt : value
+        saveConfig()
+    }
+
+    public func resetCleanupSystemPrompt() {
+        config.cleanupSystemPrompt = AppConfig.defaultCleanupSystemPrompt
         saveConfig()
     }
 

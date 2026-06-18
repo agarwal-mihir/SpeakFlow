@@ -37,12 +37,21 @@ public final class JSONConfigStore: ConfigStoreProtocol {
         if let value = obj["lmstudio_base_url"] as? String { cfg.lmstudioBaseURL = value }
         if let value = obj["lmstudio_auto_start"] as? Bool { cfg.lmstudioAutoStart = value }
         if let value = obj["lmstudio_start_timeout_ms"] as? Int { cfg.lmstudioStartTimeoutMs = min(max(1000, value), 60000) }
-        if let raw = obj["cleanup_provider"] as? String, let mode = CleanupProvider(rawValue: raw) { cfg.cleanupProvider = mode }
         if let value = obj["mlx_enabled"] as? Bool { cfg.mlxEnabled = value }
         if let value = obj["mlx_base_url"] as? String { cfg.mlxBaseURL = value }
         if let raw = obj["mlx_model"] as? String, let model = MLXTextModel(rawValue: raw) { cfg.mlxModel = model }
         if let value = obj["mlx_auto_start"] as? Bool { cfg.mlxAutoStart = value }
         if let value = obj["mlx_start_timeout_ms"] as? Int { cfg.mlxStartTimeoutMs = min(max(1000, value), 120000) }
+        if let raw = obj["cleanup_provider"] as? String {
+            if raw == "priority" {
+                cfg.cleanupProvider = cfg.mlxEnabled ? .mlxLocal : .groqCloud
+            } else if let mode = CleanupProvider(rawValue: raw) {
+                cfg.cleanupProvider = mode
+            }
+        }
+        if let value = obj["cleanup_system_prompt"] as? String, !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            cfg.cleanupSystemPrompt = value
+        }
         if let value = obj["groq_base_url"] as? String { cfg.groqBaseURL = value }
         if let value = obj["groq_model"] as? String { cfg.groqModel = value }
         if let value = obj["max_cleanup_timeout_ms"] as? Int { cfg.maxCleanupTimeoutMs = max(200, value) }
@@ -87,6 +96,7 @@ public final class JSONConfigStore: ConfigStoreProtocol {
         merged["lmstudio_auto_start"] = config.lmstudioAutoStart
         merged["lmstudio_start_timeout_ms"] = config.lmstudioStartTimeoutMs
         merged["cleanup_provider"] = config.cleanupProvider.rawValue
+        merged["cleanup_system_prompt"] = config.cleanupSystemPrompt
         merged["mlx_enabled"] = config.mlxEnabled
         merged["mlx_base_url"] = config.mlxBaseURL
         merged["mlx_model"] = config.mlxModel.rawValue

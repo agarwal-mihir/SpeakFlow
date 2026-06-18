@@ -39,6 +39,29 @@ struct CleanupServiceTests {
         override func stopLoading() {}
     }
 
+    private static func requestBody(_ request: URLRequest) -> Data {
+        if let body = request.httpBody {
+            return body
+        }
+        guard let stream = request.httpBodyStream else {
+            return Data()
+        }
+        stream.open()
+        defer { stream.close() }
+
+        var data = Data()
+        let bufferSize = 4096
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
+        defer { buffer.deallocate() }
+
+        while stream.hasBytesAvailable {
+            let read = stream.read(buffer, maxLength: bufferSize)
+            if read <= 0 { break }
+            data.append(buffer, count: read)
+        }
+        return data
+    }
+
     @Test func deterministicModeSkipsRemoteRewrite() async throws {
         let config: AppConfig = {
             var c = AppConfig()
@@ -55,10 +78,10 @@ struct CleanupServiceTests {
         #expect(result.text == "Hello there.")
     }
 
-    @Test func priorityFallsBackFromGroqToLMStudio() async throws {
+    @Test func groqCleanupDoesNotFallBackToLMStudio() async throws {
         let config: AppConfig = {
             var c = AppConfig()
-            c.cleanupProvider = .priority
+            c.cleanupProvider = .groqCloud
             c.lmstudioEnabled = true
             c.groqBaseURL = "https://groq.test/v1"
             c.lmstudioBaseURL = "http://lmstudio.test/v1"
@@ -95,14 +118,14 @@ struct CleanupServiceTests {
             TranscriptResult(rawText: "hello there", detectedLanguage: "en", confidence: 0.9, isMixedScript: false)
         )
 
-        #expect(result.rewriteProvider == "lmstudio")
-        #expect(result.text == "Hello there!")
+        #expect(result.rewriteProvider == nil)
+        #expect(result.text == "Hello there.")
     }
 
-    @Test func priorityUsesGroqEvenWhenLMStudioDisabled() async throws {
+    @Test func groqCleanupUsesSelectedGroqModelAndOpenWhisprPrompt() async throws {
         let config: AppConfig = {
             var c = AppConfig()
-            c.cleanupProvider = .priority
+            c.cleanupProvider = .groqCloud
             c.lmstudioEnabled = false
             c.groqBaseURL = "https://groq.test/v1"
             c.groqModel = "meta-llama/llama-4-maverick-17b-128e-instruct"
@@ -118,6 +141,11 @@ struct CleanupServiceTests {
                 return (500, Data())
             }
             if url.contains("groq.test"), url.contains("/chat/completions") {
+                let body = try JSONSerialization.jsonObject(with: Self.requestBody(request)) as? [String: Any]
+                #expect(body?["model"] as? String == "meta-llama/llama-4-maverick-17b-128e-instruct")
+                let messages = body?["messages"] as? [[String: Any]]
+                let system = messages?.first?["content"] as? String
+                #expect(system?.contains("IMPORTANT: You are a text cleanup tool.") == true)
                 return (200, Data("{\"choices\":[{\"message\":{\"content\":\"Hello from groq.\"}}]}".utf8))
             }
             return (404, Data())
@@ -133,7 +161,7 @@ struct CleanupServiceTests {
             TranscriptResult(rawText: "hello from groq", detectedLanguage: "en", confidence: 0.9, isMixedScript: false)
         )
 
-        #expect(result.rewriteProvider == "groq")
+        #expect(result.rewriteProvider == "groq_cloud")
         #expect(result.text == "Hello from groq.")
     }
 }

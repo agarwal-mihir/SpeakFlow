@@ -3,6 +3,8 @@ import Foundation
 import Quartz
 
 public final class HotkeyService: HotkeyServiceProtocol, @unchecked Sendable {
+    private static let functionKeycode = 63
+
     private var mode: HotkeyMode = .fnHold
     private var onPress: (@Sendable () -> Void)?
     private var onRelease: (@Sendable () -> Void)?
@@ -66,7 +68,7 @@ public final class HotkeyService: HotkeyServiceProtocol, @unchecked Sendable {
 
         let ref = UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque())
         guard let tap = CGEvent.tapCreate(
-            tap: .cgSessionEventTap,
+            tap: .cghidEventTap,
             place: .headInsertEventTap,
             options: .defaultTap,
             eventsOfInterest: CGEventMask(mask),
@@ -109,7 +111,7 @@ public final class HotkeyService: HotkeyServiceProtocol, @unchecked Sendable {
         let fnPressed = flags.contains(.maskSecondaryFn)
         switch mode {
         case .fnHold:
-            handleFnHold(fnPressed)
+            handleFnHold(type: type, fnPressed: fnPressed, keycode: keycode)
         case .fnSpaceHold:
             if handleFnSpace(type: type, fnPressed: fnPressed, keycode: keycode) {
                 return nil
@@ -119,7 +121,26 @@ public final class HotkeyService: HotkeyServiceProtocol, @unchecked Sendable {
         return Unmanaged.passRetained(event)
     }
 
-    private func handleFnHold(_ fnPressed: Bool) {
+    private func handleFnHold(type: CGEventType, fnPressed: Bool, keycode: Int) {
+        if keycode == Self.functionKeycode && !fnPressed {
+            if type == .flagsChanged {
+                if fnDown {
+                    fnDown = false
+                    onRelease?()
+                } else {
+                    fnDown = true
+                    onPress?()
+                }
+            } else if type == .keyDown && !fnDown {
+                fnDown = true
+                onPress?()
+            } else if type == .keyUp && fnDown {
+                fnDown = false
+                onRelease?()
+            }
+            return
+        }
+
         if fnPressed && !fnDown {
             fnDown = true
             onPress?()

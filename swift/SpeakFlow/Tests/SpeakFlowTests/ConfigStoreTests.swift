@@ -19,6 +19,8 @@ struct ConfigStoreTests {
           "compute_backend": "gpu",
           "lmstudio_auto_start": false,
           "lmstudio_start_timeout_ms": 12000,
+          "cleanup_provider": "mlx_local",
+          "cleanup_system_prompt": "Custom cleanup prompt",
           "mlx_enabled": true,
           "mlx_base_url": "http://127.0.0.1:8080/v1",
           "mlx_model": "mlx-community/Qwen3-4B-4bit",
@@ -39,6 +41,8 @@ struct ConfigStoreTests {
         #expect(cfg.computeBackend == .gpu)
         #expect(cfg.lmstudioAutoStart == false)
         #expect(cfg.lmstudioStartTimeoutMs == 12000)
+        #expect(cfg.cleanupProvider == .mlxLocal)
+        #expect(cfg.cleanupSystemPrompt == "Custom cleanup prompt")
         #expect(cfg.mlxEnabled)
         #expect(cfg.mlxBaseURL == "http://127.0.0.1:8080/v1")
         #expect(cfg.mlxModel == .qwen3_4B)
@@ -46,6 +50,7 @@ struct ConfigStoreTests {
         #expect(cfg.mlxStartTimeoutMs == 45000)
         #expect(cfg.launchPermissionPromptCompleted)
         cfg.cleanupProvider = .deterministic
+        cfg.cleanupSystemPrompt = AppConfig.defaultCleanupSystemPrompt
         cfg.transcriptionProvider = .whisperKit
         cfg.computeBackend = .cpu
         try store.save(cfg)
@@ -54,6 +59,7 @@ struct ConfigStoreTests {
         let obj = try JSONSerialization.jsonObject(with: raw) as? [String: Any]
         #expect(obj?["unknown_key"] as? String == "keep")
         #expect(obj?["cleanup_provider"] as? String == "deterministic")
+        #expect(obj?["cleanup_system_prompt"] as? String == AppConfig.defaultCleanupSystemPrompt)
         #expect(obj?["transcription_provider"] as? String == "whisperkit")
         #expect(obj?["whisper_model"] as? String == "large-v3-turbo")
         #expect(obj?["parakeet_model"] as? String == "parakeet-unified-en-0.6b")
