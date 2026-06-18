@@ -512,6 +512,7 @@ public final class AppRuntime: ObservableObject {
         )
         guard serviceEnabled else { return }
         hotkeyService.start(mode: config.hotkeyMode)
+        AppLogger.info("Hotkeys configured. serviceEnabled=\(serviceEnabled) mode=\(config.hotkeyMode.rawValue)")
     }
 
     nonisolated private func handlePasteLastHotkey() -> Bool {

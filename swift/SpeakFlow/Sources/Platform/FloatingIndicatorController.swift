@@ -99,7 +99,7 @@ public final class FloatingIndicatorController {
     }
 
     private func show() {
-        panel.orderFront(nil)
+        panel.orderFrontRegardless()
     }
 
     private func showThenHide() {
